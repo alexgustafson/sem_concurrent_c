@@ -22,6 +22,8 @@ void FieldManagerTests::FirstTest()
 void FieldManagerTests::TestField()
 {
     beginTest("Create Field");
+    
+    initialize_field_manager();
 
     set_size(1);
     take_cell(0, 0, 1);
@@ -38,11 +40,14 @@ void FieldManagerTests::TestField()
     take_cell(1, 2, 8);
     take_cell(2, 2, 9);
     
-    expectEquals(get_cell(0, 0)->player_id, 1);
-    expectEquals(get_cell(1, 0)->player_id, 2);
-    expectEquals(get_cell(0, 1)->player_id, 3);
-    expectEquals(get_cell(1, 1)->player_id, 4);
-    expectEquals(get_cell(2, 2)->player_id, 9);
+    
+    expectEquals(get_cell_player(0, 0), 1);
+    expectEquals(get_cell_player(1, 0), 2);
+    expectEquals(get_cell_player(0, 1), 3);
+    expectEquals(get_cell_player(1, 1), 4);
+    expectEquals(get_cell_player(2, 2), 9);
+    
+    release_field_manager();
     
 }
 

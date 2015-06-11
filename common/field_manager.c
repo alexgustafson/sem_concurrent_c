@@ -8,30 +8,84 @@
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
 
-int dim = 0;
-struct cell* field;
+struct cell {
+    int player_id;
+    pthread_mutex_t cell_lock;
+};
 
-pthread_rwlock_t* global_lock;
+struct field {
+    pthread_rwlock_t field_lock;
+    struct cell* cells;
+};
+
+int dim = 0;
+
+struct field* field;
+
+void request_global_lock();
+void release_global_lock();
+void free_cell(struct cell *cell);
 
 int initialize_field_manager()
 {
-    if(pthread_rwlock_init(global_lock, NULL) != 0)
+    // initialize field
+    field = malloc(sizeof(struct field));
+    if (pthread_rwlock_init(&field->field_lock, NULL) != 0)
     {
+        
         perror("could not initialize global lock");
-        return -1;
+        return NULL;
     }
     return 1;
 }
 
-int request_global_lock()
+void release_field_manager()
 {
-        
+    release_global_lock();
+    
+    for (int i = (dim*dim)-1; i > -1; --i) {
+        free_cell(&field->cells[i]);
+    }
+    
+    free(field);
+    
+    release_global_lock();
+    pthread_rwlock_destroy(&field->field_lock);
+}
+
+void request_global_lock()
+{
+    pthread_rwlock_wrlock(&field->field_lock);
+}
+
+void release_global_lock()
+{
+    pthread_rwlock_unlock(&field->field_lock);
+}
+
+void request_global_read()
+{
+    pthread_rwlock_rdlock(&field->field_lock);
+}
+
+void release_global_read()
+{
+    pthread_rwlock_unlock(&field->field_lock);
+}
+
+void request_cell_lock(int x, int y)
+{
+    pthread_mutex_lock(&get_cell(x, y)->cell_lock);
+}
+
+void release_cell_lock(int x, int y)
+{
+    pthread_mutex_unlock(&get_cell(x, y)->cell_lock);
 }
 
 void free_cell(struct cell *cell) {
-    //critical section
-    pthread_mutex_destroy(&cell->cell_lock);
-    free(cell);
+    //pthread_mutex_destroy(&cell->cell_lock);
+    //free(cell);
 }
 
 struct cell * create_new_cells(int n)
@@ -52,7 +106,6 @@ struct cell * create_new_cells(int n)
 
 void set_size(int n)
 {
-    //critical section
     int new_count = n * n;
     int current_count = dim * dim;
     int diff = new_count - current_count;
@@ -61,30 +114,31 @@ void set_size(int n)
     {
         struct cell* new_cells = create_new_cells(diff);
         if(dim > 0){
-            memcpy(field + (sizeof(struct cell)*dim), new_cells, diff*sizeof(struct cell));
+            memcpy(field->cells + (sizeof(struct cell)*dim), new_cells, diff*sizeof(struct cell));
         }else
         {
-            field = new_cells;
+            field->cells = new_cells;
         }
     }
     else if (diff < 0) // remove cells
     {
-        
+        //remove the cells here
+        for (int i = 0; i < diff; i++)
+        {
+            
+        }
+        //get all cell locks
     }
     dim = n;
-    //critical section
 }
 
 int get_size()
 {
-    //critical section
     return dim;
-    //critical section
 }
 
-struct cell* get_cell(int x, int y)
+int coords_to_index(int x, int y)
 {
-    //critical section
     if ((x > dim) || (y > dim)) {
         perror("out of bounds");
     }
@@ -93,17 +147,29 @@ struct cell* get_cell(int x, int y)
     int min = MIN(x, y) + 1;
     int diff = max - min;
     
-    int cell_number = (max * max) - (2*diff);
+    int cell_index = (max * max) - (2*diff);
     if (x > y)
-        cell_number++;
+        cell_index++;
     
-    return &field[cell_number];
+    return cell_index - 1;
+}
+
+struct cell* get_cell(int x, int y)
+{
+    return &field->cells[coords_to_index(x, y)];
 }
 
 void take_cell(int x, int y, int player_id)
 {
     get_cell(x, y)->player_id = player_id;
 }
+
+int get_cell_player(int x, int y)
+{
+    return get_cell(x, y)->player_id;
+}
+
+
 
 
 

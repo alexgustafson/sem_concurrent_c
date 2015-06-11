@@ -17,17 +17,13 @@
 extern "C" {
 #endif
     
-    
-    struct cell {
-        int player_id;
-        pthread_mutex_t cell_lock;
-    };
-    
     int initialize_field_manager();
+    void release_field_manager();
 
     void set_size(int n);
     int get_size();
     struct cell* get_cell(int x, int y);
+    int get_cell_player(int x, int y);
     void take_cell(int x, int y, int player_id);
 
 
