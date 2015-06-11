@@ -1,0 +1,19 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2015
+Project("{CC8D3441-4785-FD17-3659-1FF12AF30788}") = "field_manager_test", "field_manager_test.vcxproj", "{953FC707-D38A-C7B7-7A26-85A7DA0BE2BD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{953FC707-D38A-C7B7-7A26-85A7DA0BE2BD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{953FC707-D38A-C7B7-7A26-85A7DA0BE2BD}.Debug|Win32.Build.0 = Debug|Win32
+		{953FC707-D38A-C7B7-7A26-85A7DA0BE2BD}.Release|Win32.ActiveCfg = Release|Win32
+		{953FC707-D38A-C7B7-7A26-85A7DA0BE2BD}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
