@@ -21,6 +21,7 @@ public:
     FieldManagerTests() : UnitTest("") {}
     
     void FirstTest();
+    void CreateAndReleaseTests();
     void TestField();
     
     void runTest();

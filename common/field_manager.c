@@ -24,33 +24,31 @@ struct field* field;
 
 void request_global_lock();
 void release_global_lock();
-void free_cell(struct cell *cell);
 
 int initialize_field_manager()
 {
-    // initialize field
     field = malloc(sizeof(struct field));
+    field->cells = NULL;
     if (pthread_rwlock_init(&field->field_lock, NULL) != 0)
     {
-        
-        perror("could not initialize global lock");
+        perror("could not initialize field lock");
         return NULL;
     }
+    dim = 0;
     return 1;
 }
 
 void release_field_manager()
 {
-    release_global_lock();
-    
-    for (int i = (dim*dim)-1; i > -1; --i) {
-        free_cell(&field->cells[i]);
+    for (int i = 0; i < (dim*dim); i++)
+    {
+        struct cell tmpcell = field->cells[i];
+        pthread_mutex_destroy(&tmpcell.cell_lock);
     }
-    
+    free(field->cells);
     free(field);
-    
-    release_global_lock();
     pthread_rwlock_destroy(&field->field_lock);
+    dim = 0;
 }
 
 void request_global_lock()
@@ -83,11 +81,6 @@ void release_cell_lock(int x, int y)
     pthread_mutex_unlock(&get_cell(x, y)->cell_lock);
 }
 
-void free_cell(struct cell *cell) {
-    //pthread_mutex_destroy(&cell->cell_lock);
-    //free(cell);
-}
-
 struct cell * create_new_cells(int n)
 {
     struct cell *new_cells = malloc(sizeof(struct cell) * n);
@@ -95,6 +88,7 @@ struct cell * create_new_cells(int n)
         perror("out of memory");
     
     for (int i = 0; i < n ; i++) {
+        
         new_cells[i].player_id = -1;
         if (pthread_mutex_init(&new_cells[i].cell_lock, NULL) != 0)
         {
@@ -114,18 +108,21 @@ void set_size(int n)
     {
         struct cell* new_cells = create_new_cells(diff);
         if(dim > 0){
-            memcpy(field->cells + (sizeof(struct cell)*dim), new_cells, diff*sizeof(struct cell));
+            field->cells = realloc(field->cells, sizeof(struct cell) * new_count);
+            memcpy(&field->cells[current_count], new_cells, sizeof(struct cell) * diff);
+            free(new_cells);
         }else
         {
             field->cells = new_cells;
         }
+        new_cells = NULL;
     }
     else if (diff < 0) // remove cells
     {
         //remove the cells here
         for (int i = 0; i < diff; i++)
         {
-            
+            realloc(field->cells, sizeof(struct cell) * new_count);
         }
         //get all cell locks
     }
@@ -148,7 +145,7 @@ int coords_to_index(int x, int y)
     int diff = max - min;
     
     int cell_index = (max * max) - (2*diff);
-    if (x > y)
+    if (y > x)
         cell_index++;
     
     return cell_index - 1;

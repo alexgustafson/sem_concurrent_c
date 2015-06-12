@@ -14,19 +14,7 @@ LOCAL_SRC_FILES := \
   ../../../Source/field_manager_tests.cpp\
   ../../../../common/field_manager.c\
   ../../../Source/Main.cpp\
-  ../../../../../JUCE/modules/juce_audio_basics/juce_audio_basics.cpp\
-  ../../../../../JUCE/modules/juce_audio_devices/juce_audio_devices.cpp\
-  ../../../../../JUCE/modules/juce_audio_formats/juce_audio_formats.cpp\
-  ../../../../../JUCE/modules/juce_audio_processors/juce_audio_processors.cpp\
   ../../../../../JUCE/modules/juce_core/juce_core.cpp\
-  ../../../../../JUCE/modules/juce_cryptography/juce_cryptography.cpp\
-  ../../../../../JUCE/modules/juce_data_structures/juce_data_structures.cpp\
-  ../../../../../JUCE/modules/juce_events/juce_events.cpp\
-  ../../../../../JUCE/modules/juce_graphics/juce_graphics.cpp\
-  ../../../../../JUCE/modules/juce_gui_basics/juce_gui_basics.cpp\
-  ../../../../../JUCE/modules/juce_gui_extra/juce_gui_extra.cpp\
-  ../../../../../JUCE/modules/juce_opengl/juce_opengl.cpp\
-  ../../../../../JUCE/modules/juce_video/juce_video.cpp\
 
 ifeq ($(NDK_DEBUG),1)
   LOCAL_CPPFLAGS += -fsigned-char -fexceptions -frtti -g -I "../../JuceLibraryCode" -I "../../../../JUCE/modules" -O0 -std=c++11 -std=gnu++11 -D "JUCE_ANDROID=1" -D "JUCE_ANDROID_API_VERSION=10" -D "JUCE_ANDROID_ACTIVITY_CLASSNAME=com_yourcompany_field_manager_test_field_manager_test" -D JUCE_ANDROID_ACTIVITY_CLASSPATH=\"com/yourcompany/field_manager_test/field_manager_test\" -D "DEBUG=1" -D "_DEBUG=1" -D "JUCER_ANDROID_7F0E4A25=1" -D "JUCE_APP_VERSION=1.0.0" -D "JUCE_APP_VERSION_HEX=0x10000"
