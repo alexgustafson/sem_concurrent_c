@@ -109,7 +109,7 @@ void set_size(int n)
         struct cell* new_cells = create_new_cells(diff);
         if(dim > 0){
             field->cells = realloc(field->cells, sizeof(struct cell) * new_count);
-            memcpy(&field->cells[current_count -1], new_cells, sizeof(struct cell) * diff);
+            memcpy(&field->cells[current_count], new_cells, sizeof(struct cell) * diff);
             free(new_cells);
         }else
         {
