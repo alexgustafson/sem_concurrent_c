@@ -73,6 +73,11 @@ void FieldManagerTests::TestField()
     release_field_manager();
 }
 
+void FieldManagerTests::concurrentTest1()
+{
+    
+}
+
 void FieldManagerTests::runTest()
 {
     FirstTest();

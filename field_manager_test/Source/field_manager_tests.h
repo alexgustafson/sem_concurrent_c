@@ -23,11 +23,22 @@ public:
     void FirstTest();
     void CreateAndReleaseTests();
     void TestField();
-    
+    void concurrentTest1();
     void runTest();
     
     
 private:
+    
+    ////////////////////////////////////////////////////////////////////////
+    class Player : public ThreadPoolJob{
+    public:
+        Player() : ThreadPoolJob("Player"){};
+        JobStatus runJob() override;
+        ValueTree instructions;
+    private:
+        
+    };
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FieldManagerTests)
 };
 
