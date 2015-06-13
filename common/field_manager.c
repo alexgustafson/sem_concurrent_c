@@ -40,6 +40,7 @@ int initialize_field_manager()
 
 void release_field_manager()
 {
+    request_global_lock();
     for (int i = 0; i < (dim*dim); i++)
     {
         struct cell tmpcell = field->cells[i];
@@ -47,6 +48,7 @@ void release_field_manager()
     }
     free(field->cells);
     free(field);
+    release_global_lock();
     pthread_rwlock_destroy(&field->field_lock);
     dim = 0;
 }
@@ -100,6 +102,8 @@ struct cell * create_new_cells(int n)
 
 void set_size(int n)
 {
+    request_global_lock();
+
     int new_count = n * n;
     int current_count = dim * dim;
     int diff = new_count - current_count;
@@ -119,14 +123,15 @@ void set_size(int n)
     }
     else if (diff < 0) // remove cells
     {
-        //remove the cells here
+        
         for (int i = 0; i < diff; i++)
         {
             realloc(field->cells, sizeof(struct cell) * new_count);
         }
-        //get all cell locks
     }
     dim = n;
+    
+    release_global_lock();
 }
 
 int get_size()
@@ -158,7 +163,11 @@ struct cell* get_cell(int x, int y)
 
 void take_cell(int x, int y, int player_id)
 {
+    request_global_read();
+    request_cell_lock(x, y);
     get_cell(x, y)->player_id = player_id;
+    release_cell_lock(x, y);
+    release_global_read();
 }
 
 int get_cell_player(int x, int y)

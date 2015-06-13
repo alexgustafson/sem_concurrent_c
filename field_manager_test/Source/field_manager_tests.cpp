@@ -23,14 +23,14 @@ void FieldManagerTests::CreateAndReleaseTests()
 {
     beginTest("Create and Release Tests");
     initialize_field_manager();
-    set_size(20);
-    set_size(16);
-    set_size(12);
-    set_size(88);
-    set_size(2);
-    set_size(50);
-    set_size(4);
-    set_size(1);
+    for (int i = 0; i < 50; i++) {
+        set_size(i);
+    }
+    take_cell(0, 0, 212);
+    for (int i = 50; i > 0; i--) {
+        set_size(i);
+    }
+    expectEquals(get_cell_player(0, 0), 212);
     release_field_manager();
 }
 
@@ -54,6 +54,14 @@ void FieldManagerTests::TestField()
     take_cell(2, 1, 7);
     take_cell(1, 2, 8);
     take_cell(2, 2, 9);
+    
+    set_size(4);
+    
+    take_cell(3, 3, 16);
+    
+    expectEquals(get_cell_player(3, 3), 16);
+    
+    set_size(3);
     
     expectEquals(get_cell_player(0, 0), 1);
     expectEquals(get_cell_player(1, 0), 2);
