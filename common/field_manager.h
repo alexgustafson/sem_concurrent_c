@@ -25,6 +25,7 @@ extern "C" {
     struct cell* get_cell(int x, int y);
     int get_cell_player(int x, int y);
     void take_cell(int x, int y, int player_id);
+    int join_game();
 
 
 #ifdef __cplusplus

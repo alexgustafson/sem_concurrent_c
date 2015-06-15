@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <pthread.h>
+#include "apple_pthread_barrier.h"
 
 #include <unistd.h>
 
@@ -15,6 +17,7 @@ struct cell {
 
 struct field {
     pthread_rwlock_t field_lock;
+    pthread_barrier_t min_player_lock;
     struct cell* cells;
 };
 
@@ -34,6 +37,11 @@ int initialize_field_manager()
         perror("could not initialize field lock");
         return NULL;
     }
+    if (pthread_barrier_init(&field->min_player_lock, NULL, 2) != 0)
+    {
+        perror("could not minimum player lock");
+        return NULL;
+    }
     dim = 0;
     return 1;
 }
@@ -50,6 +58,7 @@ void release_field_manager()
     free(field);
     release_global_lock();
     pthread_rwlock_destroy(&field->field_lock);
+    pthread_barrier_destroy(&field->min_player_lock);
     dim = 0;
 }
 
@@ -100,10 +109,8 @@ struct cell * create_new_cells(int n)
     return new_cells;
 }
 
-void set_size(int n)
+void _set_size(int n)
 {
-    request_global_lock();
-
     int new_count = n * n;
     int current_count = dim * dim;
     int diff = new_count - current_count;
@@ -130,11 +137,32 @@ void set_size(int n)
         }
     }
     dim = n;
+}
+
+void set_size(int n)
+{
+    request_global_lock();
+    
+    _set_size(n);
+    
+    release_global_lock();
+}
+
+void increment_size()
+{
+    request_global_lock();
+    
+    _set_size((dim + 1));
     
     release_global_lock();
 }
 
 int get_size()
+{
+    return dim * dim;
+}
+
+int get_dim()
 {
     return dim;
 }
@@ -175,6 +203,14 @@ int get_cell_player(int x, int y)
     return get_cell(x, y)->player_id;
 }
 
+int join_game()
+{
+    increment_size();
+    if (dim < 3) {
+        pthread_barrier_wait(&field->min_player_lock);
+    }
+    return 0;
+}
 
 
 

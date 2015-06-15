@@ -5,6 +5,8 @@
               includeBinaryInAppConfig="1" jucerVersion="3.1.1">
   <MAINGROUP id="KV4SUg" name="field_manager_test">
     <GROUP id="{C56D5D72-6D97-5950-B370-8DBA9ED2D6C3}" name="Source">
+      <FILE id="zZkmqP" name="apple_pthread_barrier.h" compile="0" resource="0"
+            file="../common/apple_pthread_barrier.h"/>
       <FILE id="hGC5V0" name="field_manager_tests.cpp" compile="1" resource="0"
             file="Source/field_manager_tests.cpp"/>
       <FILE id="hjt1D7" name="field_manager_tests.h" compile="0" resource="0"
@@ -25,6 +27,7 @@
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="../../JUCE/modules"/>
         <MODULEPATH id="juce_data_structures" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../JUCE/modules"/>
       </MODULEPATHS>
     </XCODE_MAC>
     <XCODE_IPHONE targetFolder="Builds/iOS">
@@ -37,6 +40,7 @@
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="../../JUCE/modules"/>
         <MODULEPATH id="juce_data_structures" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../JUCE/modules"/>
       </MODULEPATHS>
     </XCODE_IPHONE>
     <VS2015 targetFolder="Builds/VisualStudio2015">
@@ -49,6 +53,7 @@
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="../../JUCE/modules"/>
         <MODULEPATH id="juce_data_structures" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../JUCE/modules"/>
       </MODULEPATHS>
     </VS2015>
     <LINUX_MAKE targetFolder="Builds/Linux">
@@ -61,6 +66,7 @@
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="../../JUCE/modules"/>
         <MODULEPATH id="juce_data_structures" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../JUCE/modules"/>
       </MODULEPATHS>
     </LINUX_MAKE>
     <ANDROID targetFolder="Builds/Android" androidVersionCode="1" androidActivityClass="com.yourcompany.field_manager_test.field_manager_test"
@@ -77,12 +83,14 @@
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="../../JUCE/modules"/>
         <MODULEPATH id="juce_data_structures" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../JUCE/modules"/>
       </MODULEPATHS>
     </ANDROID>
   </EXPORTFORMATS>
   <MODULES>
     <MODULES id="juce_core" showAllCode="1" useLocalCopy="0"/>
     <MODULES id="juce_data_structures" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_events" showAllCode="1" useLocalCopy="0"/>
   </MODULES>
   <JUCEOPTIONS/>
 </JUCERPROJECT>

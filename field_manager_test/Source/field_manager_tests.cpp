@@ -13,7 +13,6 @@
 
 void FieldManagerTests::FirstTest()
 {
-    
     beginTest("Testing The Tester");
     expect(true);
     expectEquals(true, !false);
@@ -73,14 +72,82 @@ void FieldManagerTests::TestField()
     release_field_manager();
 }
 
-void FieldManagerTests::concurrentTest1()
+void FieldManagerTests::concurrentJoin()
 {
+    initialize_field_manager();
     
+    ScopedPointer<Player> player1 = new Player();
+    player1->setName("Player 1");
+    add_instruction(player1, "join", 0);
+
+    ScopedPointer<Player> player2 = new Player();
+    player2->setName("Player 2");
+    add_instruction(player2, "join", 0);
+    
+    ScopedPointer<Player> player3 = new Player();
+    player3->setName("Player 3");
+    add_instruction(player3, "join", 0);
+    
+    ScopedPointer<Player> player4 = new Player();
+    player4->setName("Player 4");
+    add_instruction(player4, "join", 0);
+    
+    //NamedValueSet* instruction = add_instruction(player3, "take", 0);
+    //instruction->set("x", 2);
+    //instruction->set("y", 1);
+    
+    pool.addJob(player1, false);
+    pool.addJob(player2, false);
+    pool.addJob(player3, false);
+    pool.addJob(player4, false);
+
+    while(pool.getNumJobs() > 0)
+    {
+        Thread::sleep(1);
+    }
+    
+    expectEquals(get_size(), 16);
+    
+    release_field_manager();
 }
+
+void FieldManagerTests::concurrentPlaying()
+{
+    initialize_field_manager();
+    
+    ScopedPointer<Player> player1 = new Player();
+    player1->setName("Player 1");
+    add_instruction(player1, "join", 0);
+    
+    ScopedPointer<Player> player2 = new Player();
+    player2->setName("Player 2");
+    add_instruction(player2, "join", 0);
+    
+    ScopedPointer<Player> player3 = new Player();
+    player3->setName("Player 3");
+    add_instruction(player3, "join", 0);
+    
+    ScopedPointer<Player> player4 = new Player();
+    player4->setName("Player 4");
+    add_instruction(player4, "join", 0);
+    
+    release_field_manager();
+}
+
+NamedValueSet* FieldManagerTests::add_instruction(FieldManagerTests::Player *player, const Identifier &inst, const var &parameter)
+{
+    NamedValueSet* instruction = new NamedValueSet();
+    instruction->set(inst, parameter);
+    player->instructions.add(instruction);
+    return instruction;
+}
+
 
 void FieldManagerTests::runTest()
 {
     FirstTest();
     CreateAndReleaseTests();
     TestField();
+    concurrentJoin();
+    concurrentPlaying();
 }
