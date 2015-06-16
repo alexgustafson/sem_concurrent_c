@@ -15,6 +15,7 @@
 #include "field_manager.h"
 
 
+
 class FieldManagerTests : public UnitTest
 {
 public:
@@ -25,6 +26,7 @@ public:
     void TestField();
     void concurrentJoin();
     void concurrentPlaying();
+    void concurrentPlayingAndLeaving();
     void runTest();
 
 private:
@@ -32,10 +34,15 @@ private:
     ////////////////////////////////////////////////////////////////////////
     class Player : public ThreadPoolJob{
     public:
-        Player() : ThreadPoolJob("Player"){ myname = ""; };
+        Player() : ThreadPoolJob("Player"){ myName = ""; };
         void setName(String name){
-            myname = name;
+            myName = name;
         }
+        void setId(int pId)
+        {
+            playerId = pId;
+        }
+        
         JobStatus runJob() override{
             for (int i = 0; i < instructions.size(); i++) {
                 NamedValueSet* instruction = instructions[i];
@@ -44,30 +51,53 @@ private:
 
                 if(cmd == "join"){
                     
-                    Logger::writeToLog(myname + " is joining");
+                    Logger::writeToLog(myName + " is joining");
                     if (join_game() != 0){
-                        Logger::writeToLog(myname + " could not join game");
+                        Logger::writeToLog(myName + " could not join game");
                         return jobHasFinished;
                     }
-                    Logger::writeToLog(myname + " joined");
+                    Logger::writeToLog(myName + " joined");
                     
                 }else if (cmd == "take")
                 {
                     int x = instruction->getWithDefault("x", "");
                     int y = instruction->getWithDefault("y", "");
-                    
-                    Logger::writeToLog("taking x: " + String(x) + " y: " + String(y));
+                    Logger::writeToLog(myName + " trying to take x: " + String(x) + " y: " + String(y));
+
+                    if (take_cell(x, y, playerId) == 1){
+                        Logger::writeToLog(myName + " taken x: " + String(x) + " y: " + String(y));
+                    }else{
+                        Logger::writeToLog(myName + " could not take x: " + String(x) + " y: " + String(y));
+                    }
                     
                 }else if (cmd == "sleep")
                 {
+                    Logger::writeToLog(myName + " sleeping " );
                     
+                    int time = instruction->getWithDefault("sleep", 1);
+                    sleep(time);
+                    
+                    Logger::writeToLog(myName + " awoken " );
+                    
+                }
+                else if (cmd == "leave")
+                {
+                    Logger::writeToLog(myName + " leaving game " );
+                    if (leave_game() != 0){
+                        Logger::writeToLog(myName + " could not leave game");
+                        return jobHasFinished;
+                    }
+                
+                    Logger::writeToLog(myName + " left game " );
+                
                 }
             }
             return jobHasFinished;
         }
         OwnedArray<NamedValueSet> instructions;
     private:
-        String myname;
+        String myName;
+        int playerId;
     };
     
     ThreadPool pool;

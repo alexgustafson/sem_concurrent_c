@@ -22,7 +22,7 @@ struct field {
 };
 
 int dim = 0;
-
+int delay = 0;
 struct field* field;
 
 void request_global_lock();
@@ -60,6 +60,7 @@ void release_field_manager()
     pthread_rwlock_destroy(&field->field_lock);
     pthread_barrier_destroy(&field->min_player_lock);
     dim = 0;
+    delay = 0;
 }
 
 void request_global_lock()
@@ -82,9 +83,12 @@ void release_global_read()
     pthread_rwlock_unlock(&field->field_lock);
 }
 
-void request_cell_lock(int x, int y)
+int request_cell_lock(int x, int y)
 {
-    pthread_mutex_lock(&get_cell(x, y)->cell_lock);
+    if (get_cell(x, y) == NULL) {
+        return -1;
+    }
+    return pthread_mutex_trylock(&get_cell(x, y)->cell_lock);
 }
 
 void release_cell_lock(int x, int y)
@@ -157,6 +161,17 @@ void increment_size()
     release_global_lock();
 }
 
+void decrement_size()
+{
+    request_global_lock();
+    
+    _set_size((dim - 1));
+    
+    release_global_lock();
+}
+
+
+
 int get_size()
 {
     return dim * dim;
@@ -169,8 +184,8 @@ int get_dim()
 
 int coords_to_index(int x, int y)
 {
-    if ((x > dim) || (y > dim)) {
-        perror("out of bounds");
+    if (x > dim || y > dim || x < 0 || y < 0){
+        return - 2; //out of bounds
     }
     
     int max = MAX(x, y) + 1;
@@ -186,16 +201,29 @@ int coords_to_index(int x, int y)
 
 struct cell* get_cell(int x, int y)
 {
+    if (coords_to_index(x, y) < 0) {
+        return NULL;
+    }
     return &field->cells[coords_to_index(x, y)];
 }
 
-void take_cell(int x, int y, int player_id)
+int take_cell(int x, int y, int player_id)
 {
+    int respsonse;
     request_global_read();
-    request_cell_lock(x, y);
-    get_cell(x, y)->player_id = player_id;
-    release_cell_lock(x, y);
+    int result = request_cell_lock(x, y);
+    if (result == 0)
+    {
+        get_cell(x, y)->player_id = player_id;
+        sleep(delay);
+        release_cell_lock(x, y);
+        respsonse = 1;
+    }else{
+        respsonse= result;
+    }
+
     release_global_read();
+    return respsonse;
 }
 
 int get_cell_player(int x, int y)
@@ -212,7 +240,45 @@ int join_game()
     return 0;
 }
 
+int leave_game()
+{
+    decrement_size();
+    if (dim < 2) {
+        //TODO : re-init the barrier mutex with the correct number
+    }
+    return 0;
+}
 
+void set_delay(int n)
+{
+    delay = n;
+}
+
+int is_there_a_winner()
+{
+    request_global_lock();
+    if(dim < 2)
+    {
+        release_global_lock();
+        return -1;
+    }
+    
+    struct cell cell = field->cells[0];
+    int winning_player = cell.player_id;
+    for (int i = 1; i < (dim * dim); i++) {
+        
+        struct cell next_cell = field->cells[i];
+        if (next_cell.player_id == winning_player) {
+            
+        }else{
+            release_global_lock();
+            return -1;
+        }
+    }
+    
+    release_global_lock();
+    return winning_player;
+}
 
 
 

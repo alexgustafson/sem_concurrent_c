@@ -17,6 +17,9 @@
 extern "C" {
 #endif
     
+    #define CELL_IS_OCCUPIED = -1
+    #define OUT_OF_BOUNDS = -2
+    
     int initialize_field_manager();
     void release_field_manager();
 
@@ -24,9 +27,11 @@ extern "C" {
     int get_size();
     struct cell* get_cell(int x, int y);
     int get_cell_player(int x, int y);
-    void take_cell(int x, int y, int player_id);
+    int take_cell(int x, int y, int player_id);
     int join_game();
-
+    int leave_game();
+    void set_delay(int n);
+    int is_there_a_winner();
 
 #ifdef __cplusplus
 }

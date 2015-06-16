@@ -68,12 +68,15 @@ void FieldManagerTests::TestField()
     expectEquals(get_cell_player(1, 1), 4);
     expectEquals(get_cell_player(1, 2), 8);
     expectEquals(get_cell_player(2, 2), 9);
+    
+    int should_be_error = take_cell(-1, 6, 12);
 
     release_field_manager();
 }
 
 void FieldManagerTests::concurrentJoin()
 {
+    beginTest("Concurrent Join");
     initialize_field_manager();
     
     ScopedPointer<Player> player1 = new Player();
@@ -91,10 +94,6 @@ void FieldManagerTests::concurrentJoin()
     ScopedPointer<Player> player4 = new Player();
     player4->setName("Player 4");
     add_instruction(player4, "join", 0);
-    
-    //NamedValueSet* instruction = add_instruction(player3, "take", 0);
-    //instruction->set("x", 2);
-    //instruction->set("y", 1);
     
     pool.addJob(player1, false);
     pool.addJob(player2, false);
@@ -113,24 +112,268 @@ void FieldManagerTests::concurrentJoin()
 
 void FieldManagerTests::concurrentPlaying()
 {
+    beginTest("Concurrent Playing");
+
     initialize_field_manager();
+    set_delay(1);
     
     ScopedPointer<Player> player1 = new Player();
     player1->setName("Player 1");
+    player1->setId(1);
     add_instruction(player1, "join", 0);
+    NamedValueSet* instruction = add_instruction(player1, "take", 0);
+    instruction->set("x", 1);
+    instruction->set("y", 1);
+    instruction = add_instruction(player1, "take", 0);
+    instruction->set("x", 0);
+    instruction->set("y", 1);
+    instruction = add_instruction(player1, "take", 0);
+    instruction->set("x", 1);
+    instruction->set("y", 0);
+    instruction = add_instruction(player1, "take", 0);
+    instruction->set("x", 0);
+    instruction->set("y", 0);
     
     ScopedPointer<Player> player2 = new Player();
     player2->setName("Player 2");
+    player2->setId(2);
     add_instruction(player2, "join", 0);
+    instruction = add_instruction(player2, "take", 0);
+    instruction->set("x", 1);
+    instruction->set("y", 1);
+    instruction = add_instruction(player2, "take", 0);
+    instruction->set("x", 1);
+    instruction->set("y", 0);
+    instruction = add_instruction(player2, "take", 0);
+    instruction->set("x", 0);
+    instruction->set("y", 1);
+    instruction = add_instruction(player2, "take", 0);
+    instruction->set("x", 0);
+    instruction->set("y", 0);
     
     ScopedPointer<Player> player3 = new Player();
     player3->setName("Player 3");
+    player3->setId(3);
     add_instruction(player3, "join", 0);
+    instruction = add_instruction(player3, "sleep", 3);
+    instruction = add_instruction(player3, "take", 0);
+    instruction->set("x", 1);
+    instruction->set("y", 1);
+    instruction = add_instruction(player3, "take", 0);
+    instruction->set("x", 0);
+    instruction->set("y", 0);
+    instruction = add_instruction(player3, "take", 0);
+    instruction->set("x", 0);
+    instruction->set("y", 1);
+    instruction = add_instruction(player3, "take", 0);
+    instruction->set("x", 1);
+    instruction->set("y", 0);
     
     ScopedPointer<Player> player4 = new Player();
     player4->setName("Player 4");
-    add_instruction(player4, "join", 0);
+    player4->setId(4);
+    instruction = add_instruction(player4, "join", 0);
+    instruction = add_instruction(player4, "sleep", 15);
+    instruction = add_instruction(player4, "take", 0);
+    instruction->set("x", 0);
+    instruction->set("y", 0);
+    instruction = add_instruction(player4, "take", 0);
+    instruction->set("x", 0);
+    instruction->set("y", 1);
+    instruction = add_instruction(player4, "take", 0);
+    instruction->set("x", 0);
+    instruction->set("y", 2);
+    instruction = add_instruction(player4, "take", 0);
+    instruction->set("x", 0);
+    instruction->set("y", 3);
+    instruction = add_instruction(player4, "take", 0);
+    instruction->set("x", 1);
+    instruction->set("y", 0);
+    instruction = add_instruction(player4, "take", 0);
+    instruction->set("x", 1);
+    instruction->set("y", 1);
+    instruction = add_instruction(player4, "take", 0);
+    instruction->set("x", 1);
+    instruction->set("y", 2);
+    instruction = add_instruction(player4, "take", 0);
+    instruction->set("x", 1);
+    instruction->set("y", 3);
+    instruction = add_instruction(player4, "take", 0);
+    instruction->set("x", 2);
+    instruction->set("y", 0);
+    instruction = add_instruction(player4, "take", 0);
+    instruction->set("x", 2);
+    instruction->set("y", 1);
+    instruction = add_instruction(player4, "take", 0);
+    instruction->set("x", 2);
+    instruction->set("y", 2);
+    instruction = add_instruction(player4, "take", 0);
+    instruction->set("x", 2);
+    instruction->set("y", 3);
+    instruction = add_instruction(player4, "take", 0);
+    instruction->set("x", 3);
+    instruction->set("y", 0);
+    instruction = add_instruction(player4, "take", 0);
+    instruction->set("x", 3);
+    instruction->set("y", 1);
+    instruction = add_instruction(player4, "take", 0);
+    instruction->set("x", 3);
+    instruction->set("y", 2);
+    instruction = add_instruction(player4, "take", 0);
+    instruction->set("x", 3);
+    instruction->set("y", 3);
     
+    pool.addJob(player1, false);
+    pool.addJob(player2, false);
+    pool.addJob(player3, false);
+    pool.addJob(player4, false);
+    
+    expectEquals(is_there_a_winner(), -1);
+
+    
+    while(pool.getNumJobs() > 0)
+    {
+        Thread::sleep(1);
+    }
+    
+    expectEquals(get_size(), 16);
+    expectEquals(is_there_a_winner(), 4);
+    release_field_manager();
+}
+
+void FieldManagerTests::concurrentPlayingAndLeaving()
+{
+    beginTest("Concurrent Playing");
+    
+    initialize_field_manager();
+    set_delay(1);
+    
+    ScopedPointer<Player> player1 = new Player();
+    player1->setName("Player 1");
+    player1->setId(1);
+    add_instruction(player1, "join", 0);
+    NamedValueSet* instruction = add_instruction(player1, "take", 0);
+    instruction->set("x", 1);
+    instruction->set("y", 1);
+    instruction = add_instruction(player1, "take", 0);
+    instruction->set("x", 0);
+    instruction->set("y", 1);
+    instruction = add_instruction(player1, "take", 0);
+    instruction->set("x", 1);
+    instruction->set("y", 0);
+    instruction = add_instruction(player1, "take", 0);
+    instruction->set("x", 0);
+    instruction->set("y", 0);
+    instruction = add_instruction(player1, "leave", 0);
+
+    
+    ScopedPointer<Player> player2 = new Player();
+    player2->setName("Player 2");
+    player2->setId(2);
+    add_instruction(player2, "join", 0);
+    instruction = add_instruction(player2, "take", 0);
+    instruction->set("x", 1);
+    instruction->set("y", 1);
+    instruction = add_instruction(player2, "take", 0);
+    instruction->set("x", 1);
+    instruction->set("y", 0);
+    instruction = add_instruction(player2, "take", 0);
+    instruction->set("x", 0);
+    instruction->set("y", 1);
+    instruction = add_instruction(player2, "take", 0);
+    instruction->set("x", 0);
+    instruction->set("y", 0);
+    
+    ScopedPointer<Player> player3 = new Player();
+    player3->setName("Player 3");
+    player3->setId(3);
+    add_instruction(player3, "join", 0);
+    instruction = add_instruction(player3, "sleep", 3);
+    instruction = add_instruction(player3, "take", 0);
+    instruction->set("x", 1);
+    instruction->set("y", 1);
+    instruction = add_instruction(player3, "take", 0);
+    instruction->set("x", 0);
+    instruction->set("y", 0);
+    instruction = add_instruction(player3, "take", 0);
+    instruction->set("x", 0);
+    instruction->set("y", 1);
+    instruction = add_instruction(player3, "take", 0);
+    instruction->set("x", 1);
+    instruction->set("y", 0);
+    instruction = add_instruction(player3, "leave", 0);
+
+    
+    
+    ScopedPointer<Player> player4 = new Player();
+    player4->setName("Player 4");
+    player4->setId(4);
+    instruction = add_instruction(player4, "join", 0);
+    instruction = add_instruction(player4, "sleep", 15);
+    instruction = add_instruction(player4, "take", 0);
+    instruction->set("x", 0);
+    instruction->set("y", 0);
+    instruction = add_instruction(player4, "take", 0);
+    instruction->set("x", 0);
+    instruction->set("y", 1);
+    instruction = add_instruction(player4, "take", 0);
+    instruction->set("x", 0);
+    instruction->set("y", 2);
+    instruction = add_instruction(player4, "take", 0);
+    instruction->set("x", 0);
+    instruction->set("y", 3);
+    instruction = add_instruction(player4, "take", 0);
+    instruction->set("x", 1);
+    instruction->set("y", 0);
+    instruction = add_instruction(player4, "take", 0);
+    instruction->set("x", 1);
+    instruction->set("y", 1);
+    instruction = add_instruction(player4, "take", 0);
+    instruction->set("x", 1);
+    instruction->set("y", 2);
+    instruction = add_instruction(player4, "take", 0);
+    instruction->set("x", 1);
+    instruction->set("y", 3);
+    instruction = add_instruction(player4, "take", 0);
+    instruction->set("x", 2);
+    instruction->set("y", 0);
+    instruction = add_instruction(player4, "take", 0);
+    instruction->set("x", 2);
+    instruction->set("y", 1);
+    instruction = add_instruction(player4, "take", 0);
+    instruction->set("x", 2);
+    instruction->set("y", 2);
+    instruction = add_instruction(player4, "take", 0);
+    instruction->set("x", 2);
+    instruction->set("y", 3);
+    instruction = add_instruction(player4, "take", 0);
+    instruction->set("x", 3);
+    instruction->set("y", 0);
+    instruction = add_instruction(player4, "take", 0);
+    instruction->set("x", 3);
+    instruction->set("y", 1);
+    instruction = add_instruction(player4, "take", 0);
+    instruction->set("x", 3);
+    instruction->set("y", 2);
+    instruction = add_instruction(player4, "take", 0);
+    instruction->set("x", 3);
+    instruction->set("y", 3);
+    
+    pool.addJob(player1, false);
+    pool.addJob(player2, false);
+    pool.addJob(player3, false);
+    pool.addJob(player4, false);
+    
+    expectEquals(is_there_a_winner(), -1);
+    
+    
+    while(pool.getNumJobs() > 0)
+    {
+        Thread::sleep(1);
+    }
+    
+    expectEquals(get_size(), 4);
+    expectEquals(is_there_a_winner(), 4);
     release_field_manager();
 }
 
@@ -142,12 +385,14 @@ NamedValueSet* FieldManagerTests::add_instruction(FieldManagerTests::Player *pla
     return instruction;
 }
 
-
 void FieldManagerTests::runTest()
 {
     FirstTest();
     CreateAndReleaseTests();
     TestField();
     concurrentJoin();
-    concurrentPlaying();
+    //concurrentPlaying();
+    concurrentPlayingAndLeaving();
 }
+
+
