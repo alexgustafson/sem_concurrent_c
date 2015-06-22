@@ -1,216 +1,130 @@
 
 #include "tcp_server.h"
 
-#include <sys/socket.h> //socket functions
-#include <netinet/in.h> //sockaddr_in
-#include <fcntl.h> // fcntl
-#include <sys/select.h> //select
-#include <stdlib.h>
+#include <sys/types.h>
 #include <unistd.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <string.h>
+#include <pthread.h>
 #include <stdio.h>
-#include <errno.h>
-#include <assert.h>
+#include <stdlib.h>
+#include "common.h"
 
 #define MAX_LINE 16384
+#define QUEUE_SIZE 16
+#define RCVBUFSIZE 32
 
-char echo(char c)
-{
-    return c;
-}
+void *handle_tcp_client(void *arg);
 
-struct fd_state {
-    char buffer[MAX_LINE];
-    size_t buffer_used;
-    
-    int writing;
-    size_t n_written;
-    size_t write_upto;
+
+struct thread_arg {
+    int client_socket;
+    int thread_idx;
 };
 
-struct fd_state * alloc_fd_state()
-{
-    struct fd_state *state = (struct fd_state*)malloc(sizeof(struct fd_state));
-    if (!state)
-        return 0;
-    state->buffer_used = state->n_written = state->writing =
-    state->write_upto = 0;
-    return state;
-}
 
-void free_fd_state(struct fd_state *state)
-{
-    free(state);
-}
+int shutdown_server = 0;
+int server_is_running = 0;
 
-int do_read(int fd, struct fd_state *state)
+void *runserver(void *arg)
 {
-    char buf[1024];
-    int i;
-    ssize_t result;
-    while (1) {
-        result = recv(fd, buf, sizeof(buf), 0);
-        if (result <= 0)
-            break;
-        
-        for (i=0; i < result; ++i)  {
-            if (state->buffer_used < sizeof(state->buffer))
-                state->buffer[state->buffer_used++] = echo(buf[i]);
-            if (buf[i] == '\n') {
-                state->writing = 1;
-                state->write_upto = state->buffer_used;
-            }
-        }
-    }
-    
-    if (result == 0) {
-        return 1;
-    } else if (result < 0) {
-        if (errno == EAGAIN)
-            return 0;
-        return -1;
-    }
-    
-    return 0;
-}
-
-int do_write(int fd, struct fd_state *state)
-{
-    while (state->n_written < state->write_upto) {
-        ssize_t result = send(fd, state->buffer + state->n_written,
-                              state->write_upto - state->n_written, 0);
-        if (result < 0) {
-            if (errno == EAGAIN)
-                return 0;
-            return -1;
-        }
-        assert(result != 0);
-        
-        state->n_written += result;
-    }
-    
-    if (state->n_written == state->buffer_used)
-        state->n_written = state->write_upto = state->buffer_used = 0;
-    
-    state->writing = 0;
-    
-    return 0;
-}
-
-void make_nonblocking(int fd)
-{
-    fcntl(fd, F_SETFL, O_NONBLOCK);
-}
-
-void startserver()
-{
-    
-    // quelle / inspiration : http://www.wangafu.net/~nickm/libevent-book/01_intro.html
-    
     int listener;
-    struct fd_state *state[FD_SETSIZE];
-    struct sockaddr_in sin;
-    int i, maxfd;
-    fd_set readset, writeset, exset;
-    
-    sin.sin_family = AF_INET;
-    sin.sin_addr.s_addr = 0;
-    sin.sin_port = htons(40713);
-    
-    for (i = 0; i < FD_SETSIZE; ++i)
-        state[i] = 0;
-    
-    listener = socket(AF_INET, SOCK_STREAM, 0);
-    make_nonblocking(listener);
-    
-#ifndef WIN32
-    {
-        int one = 1;
-        setsockopt(listener, SOL_SOCKET, SO_REUSEADDR, &one, sizeof(one));
-    }
-#endif
-    
-    if (bind(listener, (struct sockaddr*)&sin, sizeof(sin)) < 0)
-    {
-        perror("bind");
-        return;
-    }
-    if (listen(listener, 16)<0)
-    {
-        perror("listen");
-        return;
-    }
-    
+    fd_set readset;
+    listener = open_listener_socket();
+
+    //make_nonblocking(listener);
+    bind_to_port(listener, 65002);
     FD_ZERO(&readset);
-    FD_ZERO(&writeset);
-    FD_ZERO(&exset);
+
+    //Listen
+    if (listen(listener, QUEUE_SIZE) == -1)
+        perror("Can't listen");
     
-    while (1) {
-        maxfd = listener;
-        FD_ZERO(&readset);
-        FD_ZERO(&writeset);
-        FD_ZERO(&exset);
+    //Accept a connection
+    struct sockaddr_storage client_addr;
+    unsigned int address_size = sizeof(client_addr);
+    int idx = 0;
+    
+    while (!shutdown_server) {
+        server_is_running = 1;
+        //int maxfd = listener;
+        /*FD_SET(listener, &readset);
         
-        FD_SET(listener, &readset);
-        
-        for(i = 0; i < FD_SETSIZE; ++i)
-        {
-            if (state[i]) {
-                if(i > maxfd)
-                    maxfd = i;
-                FD_SET(i, &readset);
-                if (state[i]->writing) {
-                    FD_SET(i, &writeset);
-                }
-            }
-        }
-        
-        if (select(maxfd+1, &readset, &writeset, &exset, 0) < 0)
-        {
+        struct timeval tv = {1, 0}; // timeout on timeval to check if server should shutdown
+        int select_return;
+        if ((select_return = select(maxfd+1, &readset, NULL, NULL, &tv)) < 0) {
             perror("select");
-            return;
+            return (void *) NULL;
         }
         
-        if (FD_ISSET(listener, &readset))
-        {
-            struct sockaddr_storage ss;
-            socklen_t slen = sizeof(ss);
-            
-            int fd = accept(listener, (struct sockaddr*)&ss, &slen);
-            if (fd < 0) {
-                perror("accept");
-            }else if (fd > FD_SETSIZE)
-            {
-                close(fd);
-            }else
-            {
-                make_nonblocking(fd);
-                state[fd] = alloc_fd_state();
-                assert(state[fd]);
-            }
+        if (select_return == 0 && shutdown_server == 1) {
+            break;
         }
+        printf("tick");
+        */
+        int connect_d = accept(listener, (struct sockaddr *) &client_addr, &address_size);
+        if (connect_d == -1){
+            perror("Can't open secondary socket");
+            continue;
+        }
+        pthread_t thread;
+        printf("accepting new client on socket %i\r\n", connect_d);
+        struct thread_arg *thread_data = (struct thread_arg *) malloc(sizeof(struct thread_arg));
+        thread_data->client_socket = connect_d;
+        thread_data->thread_idx = idx;
+        idx++;
+        pthread_create(&thread, NULL, handle_tcp_client, thread_data);
+        pthread_detach(thread);
         
-        for(i = 0; i < maxfd+1; ++i)
-        {
-            int r = 0;
-            if (i == listener)
-                continue;
-            
-            if(FD_ISSET(i, &readset)) {
-                r = do_read(i, state[i]);
-            }
-            
-            if(r== 0 && FD_ISSET(i, &writeset))
-            {
-                r = do_write(i, state[i]);
-            }
-            
-            if (r) {
-                free_fd_state(state[i]);
-                state[i] = 0;
-                close(i);
-            }
-        }
     }
+    close(listener);
+    server_is_running = 0;
+    return (void *) NULL;
 }
 
+int startserver()
+{
+    shutdown_server = 0;
+    pthread_t server_thread;
+    pthread_create(&server_thread, NULL, runserver, NULL);
+    return 0;
+}
+
+void stopserver()
+{
+    shutdown_server = 1;
+}
+
+void *handle_tcp_client(void *arg) {
+    printf("client thread started");
+
+    int client_socket = *((int *) arg);
+    free(arg); /* malloc was made before starting this thread */
+    char command[RCVBUFSIZE];      /* Buffer for square string */
+    int recv_msg_size;                    /* Size of received message */
+    
+    while (1) {
+        /* Receive message from client */
+        recv_msg_size = recv(client_socket, command, RCVBUFSIZE - 1, 0);
+        //handle_error(recv_msg_size, "recv() failed", PROCESS_EXIT);
+        printf("recieved message");
+        if (recv_msg_size == 0) {
+            /* zero indicates end of transmission */
+            break;
+        }
+        printf(command);
+        command[recv_msg_size] = '\000';
+        /* Send received string and receive again until end of transmission */
+        /* Square message and send it back to client */
+   
+    }
+    
+    close(client_socket);    /* Close client socket */
+    return NULL;}
+
+int server_running()
+{
+    return server_is_running;
+}
 

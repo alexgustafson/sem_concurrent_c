@@ -391,7 +391,7 @@ void FieldManagerTests::runTest()
     CreateAndReleaseTests();
     TestField();
     concurrentJoin();
-    //concurrentPlaying();
+    concurrentPlaying();
     concurrentPlayingAndLeaving();
 }
 

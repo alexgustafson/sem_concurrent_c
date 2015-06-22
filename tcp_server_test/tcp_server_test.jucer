@@ -5,6 +5,7 @@
               jucerVersion="3.1.1">
   <MAINGROUP id="ENwuhc" name="tcp_server_test">
     <GROUP id="{AF5E742D-CEE2-3896-EF69-5319C36A69FC}" name="Source">
+      <FILE id="jiYjjK" name="common.h" compile="0" resource="0" file="../common/common.h"/>
       <FILE id="nvOuiK" name="tcp_server.c" compile="1" resource="0" file="../common/tcp_server.c"/>
       <FILE id="ipLoNz" name="tcp_server.h" compile="0" resource="0" file="../common/tcp_server.h"/>
       <FILE id="Rx5SiV" name="tcp_server_tests.cpp" compile="1" resource="0"
