@@ -5,12 +5,19 @@
 extern "C" {
 #endif
     
-
-
-int startserver();
-void stopserver();
+    typedef int (*join_cb)(void);
+    typedef int (*leave_cb)(void);
+    typedef int (*take_cb)(int, int, int);
+    typedef int (*size_cb)();
+    typedef int (*status_cb)(int, int);
+    typedef int (*winner_cb)();
     
-int server_running();
+    void register_callbacks(join_cb jcb, leave_cb lcb, take_cb tcb, size_cb scb, status_cb stcb, winner_cb wcb);
+
+    int startserver(int port);
+    void stopserver();
+    
+    int server_running();
 
 
 #ifdef __cplusplus

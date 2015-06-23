@@ -1,0 +1,19 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2015
+Project("{481E06E7-AEAB-CB7E-475A-D7479DC2882E}") = "consolidated_tests", "consolidated_tests.vcxproj", "{00CE5490-CA45-FC6C-07FF-42C98D24EA5C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{00CE5490-CA45-FC6C-07FF-42C98D24EA5C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{00CE5490-CA45-FC6C-07FF-42C98D24EA5C}.Debug|Win32.Build.0 = Debug|Win32
+		{00CE5490-CA45-FC6C-07FF-42C98D24EA5C}.Release|Win32.ActiveCfg = Release|Win32
+		{00CE5490-CA45-FC6C-07FF-42C98D24EA5C}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

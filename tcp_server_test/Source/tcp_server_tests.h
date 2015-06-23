@@ -18,7 +18,7 @@
 #include <unistd.h>
 #include <stdio.h>
 
-
+#define MAX_MESSAGE_SIZE 1000
 
 class TCPServerTests : public UnitTest
 {
@@ -28,6 +28,7 @@ public:
     void FirstTest();
     void ServerTest();
     void ConnectionTest();
+    void ThreePlayerTest();
     
     void runTest();
     
@@ -36,26 +37,16 @@ private:
     ////////////////////////////////////////////////////////////////////////
     class Client : public ThreadPoolJob{
     public:
-        Client() : ThreadPoolJob("Player"){ myName = ""; };
-        void setName(String name){
-            myName = name;
-        }
-        void setId(int pId)
-        {
-            playerId = pId;
-        }
-        
-        JobStatus runJob() override{
+        Client() : ThreadPoolJob("Player"){
+            myName = "";
             struct sockaddr_in server_address;
             unsigned short server_port = 65002;
-            char message[1024];
-            unsigned int message_size;
+            
             String server_ip = "127.0.0.1";
             
-            int sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+            sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
             if (sock == -1)
                 perror("Can't open socket");
-
             
             /* Construct the server address structure */
             memset(&server_address, 0, sizeof(server_address));     /* Zero out structure */
@@ -67,7 +58,18 @@ private:
             if (c < 0) {
                 perror("Can't connect");
             }
+        };
+        void setName(String name){
+            myName = name;
+        }
+        void setId(int pId)
+        {
+            playerId = pId;
+        }
+        
+        JobStatus runJob() override{
             
+            char receive_buffer[MAX_MESSAGE_SIZE];
             
             for (int i = 0; i < instructions.size(); i++) {
                 NamedValueSet* instruction = instructions[i];
@@ -76,36 +78,102 @@ private:
                 
                 if (cmd == "sleep")
                 {
-                    Logger::writeToLog(myName + " sleeping " );
+                    Logger::writeToLog(myName + " sleeping\n" );
                     
                     int time = instruction->getWithDefault("sleep", 1);
                     sleep(time);
-                    
                     Logger::writeToLog(myName + " awoken " );
-                }else if (cmd == "say")
+                    
+                }else if (cmd == "join")
                 {
-                    Logger::writeToLog(myName + " sending message " );
+                    Logger::writeToLog(myName + " atempting to connect to game server\n" );
+                    send_string(String("HELLO\n") );
+                        
+                    int sz = rec(receive_buffer);
+                    if (sz < 1) {
+                        /* zero indicates end of transmission */
+                        break;
+                    }
+                    printf("%s", receive_buffer);
+                    if(strncasecmp(receive_buffer, "SIZE n\n", 4) == 0){
+                        printf("conneted to game, waiting for start\n");
+                        
+                        int sz = rec(receive_buffer);
+                        if (sz < 1) {
+                            /* zero indicates end of transmission */
+                            break;
+                        }
+                        if(strncasecmp(receive_buffer, "START\n", 4) == 0){
+                            printf("starting\n");
+                        }
+                        
+                    }else if (strncasecmp(receive_buffer, "NACK\n", 4) == 0)
+                    {
+                        printf("could not connet to game\n");
+                        break;
+                    }
                     
-                    String message = instruction->getWithDefault("say", "");
-                    char* new_cstring = (char *)message.toRawUTF8();
-
+                    Logger::writeToLog(myName + " sent message\n" );
                     
-                    int result = send(sock, new_cstring, strlen(new_cstring), 0);
-                    if (result == -1)
-                        fprintf(stderr, "%s: %s\n", "Error sending message", strerror(errno));
-
-                    Logger::writeToLog(myName + " sent message " );
+                }else if (cmd == "take")
+                {
+                    int x = instruction->getWithDefault("x", 1);
+                    int y = instruction->getWithDefault("y", 1);
+                    String name = instruction->getWithDefault("name", "");
+                    send_string(String::formatted(String("TAKE %i %i %s\n"), x, y, name.toRawUTF8() ) );
+                    
+                    int sz = rec(receive_buffer);
+                    if (sz < 1) {
+                        /* zero indicates end of transmission */
+                        break;
+                    }
+                    
+                }else if (cmd == "status")
+                {
+                    int x = instruction->getWithDefault("x", 1);
+                    int y = instruction->getWithDefault("y", 1);
+                    
+                    send_string(String::formatted(String("STATUS %i %i\n"), x, y ) );
+                    int sz = rec(receive_buffer);
+                    if (sz < 1) {
+                        /* zero indicates end of transmission */
+                        break;
+                    }
                 }
             }
+            Logger::writeToLog(myName + " shutting down\n" );
             return jobHasFinished;
         }
+        
+        int send_string(String msg) {
+            int result = send(sock, msg.toRawUTF8(), strlen(msg.toRawUTF8()), 0);
+            if (result == -1)
+                fprintf(stderr, "%s: %s\n", "Error sending message", strerror(errno));
+            return result;
+        }
+        
+        int rec(char* buffer)
+        {
+            int recv_msg_size = recv(sock, buffer, MAX_MESSAGE_SIZE, 0);
+            if (recv_msg_size == 0) {
+                return 0;
+            }
+            if(strncasecmp(buffer, "END", 3) == 0)
+            {
+                printf(buffer);
+                return -1;
+            }
+            return 1;
+        }
+        
         OwnedArray<NamedValueSet> instructions;
     private:
         String myName;
         int playerId;
+        int sock;
+        char* receive_buffer[MAX_MESSAGE_SIZE];
         
     };
-    
     
     ThreadPool pool;
     NamedValueSet* add_instruction(Client *player, const Identifier &inst, const var &parameter);

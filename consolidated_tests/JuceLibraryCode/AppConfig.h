@@ -11,8 +11,8 @@
 
 */
 
-#ifndef __JUCE_APPCONFIG_RZPTXY__
-#define __JUCE_APPCONFIG_RZPTXY__
+#ifndef __JUCE_APPCONFIG_BH3DZA__
+#define __JUCE_APPCONFIG_BH3DZA__
 
 //==============================================================================
 // [BEGIN_USER_CODE_SECTION]
@@ -55,4 +55,4 @@
 #endif
 
 
-#endif  // __JUCE_APPCONFIG_RZPTXY__
+#endif  // __JUCE_APPCONFIG_BH3DZA__

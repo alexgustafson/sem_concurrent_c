@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="Bh3DzA" name="consolidated_tests" projectType="consoleapp"
+              version="1.0.0" bundleIdentifier="com.yourcompany.consolidated_tests"
+              includeBinaryInAppConfig="1" jucerVersion="3.1.1">
+  <MAINGROUP id="o8q5ME" name="consolidated_tests">
+    <GROUP id="{4326B12C-EE21-A8C8-B0BE-D05D6EF8A687}" name="Source">
+      <FILE id="IewmbF" name="consolidated_tests.cpp" compile="1" resource="0"
+            file="Source/consolidated_tests.cpp"/>
+      <FILE id="eFRQZI" name="consolidated_tests.h" compile="0" resource="0"
+            file="Source/consolidated_tests.h"/>
+      <FILE id="h7n0cc" name="apple_pthread_barrier.h" compile="0" resource="0"
+            file="../common/apple_pthread_barrier.h"/>
+      <FILE id="e7rKvu" name="common.h" compile="0" resource="0" file="../common/common.h"/>
+      <FILE id="WYDtM9" name="field_manager.c" compile="1" resource="0" file="../common/field_manager.c"/>
+      <FILE id="CSkcoq" name="field_manager.h" compile="0" resource="0" file="../common/field_manager.h"/>
+      <FILE id="xCzOmo" name="tcp_server.c" compile="1" resource="0" file="../common/tcp_server.c"/>
+      <FILE id="uaJULB" name="tcp_server.h" compile="0" resource="0" file="../common/tcp_server.h"/>
+      <FILE id="hXmTfR" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
+    </GROUP>
+  </MAINGROUP>
+  <EXPORTFORMATS>
+    <XCODE_MAC targetFolder="Builds/MacOSX">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" osxSDK="default" osxCompatibility="default" osxArchitecture="default"
+                       isDebug="1" optimisation="1" targetName="consolidated_tests"/>
+        <CONFIGURATION name="Release" osxSDK="default" osxCompatibility="default" osxArchitecture="default"
+                       isDebug="0" optimisation="3" targetName="consolidated_tests"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../JUCE/modules"/>
+      </MODULEPATHS>
+    </XCODE_MAC>
+    <XCODE_IPHONE targetFolder="Builds/iOS">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" iosCompatibility="default" isDebug="1" optimisation="1"
+                       targetName="consolidated_tests"/>
+        <CONFIGURATION name="Release" iosCompatibility="default" isDebug="0" optimisation="3"
+                       targetName="consolidated_tests"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../JUCE/modules"/>
+      </MODULEPATHS>
+    </XCODE_IPHONE>
+    <VS2015 targetFolder="Builds/VisualStudio2015">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+                       isDebug="1" optimisation="1" targetName="consolidated_tests"/>
+        <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+                       isDebug="0" optimisation="3" targetName="consolidated_tests"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../JUCE/modules"/>
+      </MODULEPATHS>
+    </VS2015>
+    <LINUX_MAKE targetFolder="Builds/Linux">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" libraryPath="/usr/X11R6/lib/" isDebug="1" optimisation="1"
+                       targetName="consolidated_tests"/>
+        <CONFIGURATION name="Release" libraryPath="/usr/X11R6/lib/" isDebug="0" optimisation="3"
+                       targetName="consolidated_tests"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../JUCE/modules"/>
+      </MODULEPATHS>
+    </LINUX_MAKE>
+    <ANDROID targetFolder="Builds/Android" androidVersionCode="1" androidActivityClass="com.yourcompany.consolidated_tests.consolidated_tests"
+             androidSDKPath="${user.home}/SDKs/android-sdk" androidNDKPath="${user.home}/SDKs/android-ndk"
+             androidMinimumSDK="10" androidInternetNeeded="1" androidKeyStore="${user.home}/.android/debug.keystore"
+             androidKeyStorePass="android" androidKeyAlias="androiddebugkey"
+             androidKeyAliasPass="android" androidCpp11="1">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" androidArchitectures="armeabi armeabi-v7a" isDebug="1"
+                       optimisation="1" targetName="consolidated_tests"/>
+        <CONFIGURATION name="Release" androidArchitectures="armeabi armeabi-v7a" isDebug="0"
+                       optimisation="3" targetName="consolidated_tests"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../JUCE/modules"/>
+      </MODULEPATHS>
+    </ANDROID>
+    <CODEBLOCKS targetFolder="Builds/CodeBlocks">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="consolidated_tests"/>
+        <CONFIGURATION name="Release" isDebug="0" optimisation="3" targetName="consolidated_tests"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../JUCE/modules"/>
+      </MODULEPATHS>
+    </CODEBLOCKS>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULES id="juce_core" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_data_structures" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_events" showAllCode="1" useLocalCopy="0"/>
+  </MODULES>
+  <JUCEOPTIONS/>
+</JUCERPROJECT>

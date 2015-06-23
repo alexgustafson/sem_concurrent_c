@@ -10,8 +10,8 @@
 
 */
 
-#ifndef __APPHEADERFILE_RZPTXY__
-#define __APPHEADERFILE_RZPTXY__
+#ifndef __APPHEADERFILE_BH3DZA__
+#define __APPHEADERFILE_BH3DZA__
 
 #include "AppConfig.h"
 #include "modules/juce_core/juce_core.h"
@@ -27,10 +27,10 @@
 #if ! JUCE_DONT_DECLARE_PROJECTINFO
 namespace ProjectInfo
 {
-    const char* const  projectName    = "tcp_server_test";
+    const char* const  projectName    = "consolidated_tests";
     const char* const  versionString  = "1.0.0";
     const int          versionNumber  = 0x10000;
 }
 #endif
 
-#endif   // __APPHEADERFILE_RZPTXY__
+#endif   // __APPHEADERFILE_BH3DZA__
