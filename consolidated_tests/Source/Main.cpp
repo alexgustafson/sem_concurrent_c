@@ -9,14 +9,16 @@
 */
 
 #include "../JuceLibraryCode/JuceHeader.h"
-
+#include "consolidated_tests.h"
 
 //==============================================================================
 int main (int argc, char* argv[])
 {
 
-    // ..your code goes here!
-
+    static ConsolidatedTests consolidatedTests;
+    UnitTestRunner runner;
+    runner.setAssertOnFailure(false);
+    runner.runAllTests();
 
     return 0;
 }

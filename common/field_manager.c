@@ -43,6 +43,7 @@ int initialize_field_manager()
         return NULL;
     }
     dim = 0;
+    delay = 0;
     return 1;
 }
 

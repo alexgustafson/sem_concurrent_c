@@ -148,7 +148,7 @@ private:
         int send_string(String msg) {
             int result = send(sock, msg.toRawUTF8(), strlen(msg.toRawUTF8()), 0);
             if (result == -1)
-                fprintf(stderr, "%s: %s\n", "Error sending message", strerror(errno));
+                fprintf(stderr, "%s (socket: %i , client: %s) : %s  \n ", "Error sending message",sock, myName.toRawUTF8(), strerror(errno));
             return result;
         }
         

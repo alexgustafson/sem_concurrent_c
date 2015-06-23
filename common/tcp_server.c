@@ -62,7 +62,7 @@ int say(int socket, char *s, int check_winner) {
     }
     
     if (result == -1)
-        fprintf(stderr, "%s: %s\n", "Error sending message", strerror(errno));
+        fprintf(stderr, "%s: %s socket: %i \n", "Error sending message", strerror(errno));
     return result;
         
 }
@@ -139,6 +139,10 @@ int startserver(int port)
     shutdown_server = 0;
     pthread_t server_thread;
     pthread_create(&server_thread, NULL, runserver, NULL);
+    shutdown_server = 0;
+    server_is_running = 0;
+    game_finished = 0;
+
     return 0;
 }
 
@@ -151,6 +155,17 @@ void stopserver()
             all_sockets[i] = 0;
         }
     }
+    
+    for (int i = 0; i < 256; i++)
+    {
+        strcpy(all_names[i], "");
+    }
+    join_callback = NULL;
+    leave_callback = NULL;
+    take_callback = NULL;
+    size_callback = NULL;
+    status_callback = NULL;
+    winner_callback = NULL;
 }
 
 void *handle_tcp_client(void *arg) {
@@ -175,11 +190,13 @@ void *handle_tcp_client(void *arg) {
         command[0] = '\000';
         recv_msg_size = recv(client_socket, command, RCVBUFSIZE - 1, 0);
         command[recv_msg_size] = '\000';
-        printf("server recieved message: %s \n", command);
+        
         if (recv_msg_size == 0) {
             /* zero indicates end of transmission */
             break;
         }
+        
+        printf("server recieved message: %s \n", command);
         
         if (shutdown_server) {
             break;
@@ -194,7 +211,7 @@ void *handle_tcp_client(void *arg) {
             }
             
             int field_size = size_callback();
-            sprintf(response, "SIZE %i\n", field_size);
+            sprintf(response, "SIZE %i\n", field_size + 1);
             say(all_sockets[idx], response, 0);
             
             if (join_callback() == 0) {
