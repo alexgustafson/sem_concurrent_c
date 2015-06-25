@@ -25,12 +25,12 @@
       </CONFIGURATIONS>
       <MODULEPATHS/>
     </XCODE_MAC>
-    <LINUX_MAKE targetFolder="Builds/Linux" extraDefs="CC=gcc&#10;-std=c99" extraCompilerFlags="-D__USE_UNIX98">
+    <LINUX_MAKE targetFolder="Builds/Linux" extraDefs="" extraCompilerFlags="-D__USE_UNIX98">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" libraryPath="/usr/X11R6/lib/" isDebug="1" optimisation="1"
-                       targetName="server"/>
+                       targetName="server" headerPath="../../../common"/>
         <CONFIGURATION name="Release" libraryPath="/usr/X11R6/lib/" isDebug="0" optimisation="3"
-                       targetName="server"/>
+                       targetName="server" headerPath="../../../common"/>
       </CONFIGURATIONS>
       <MODULEPATHS/>
     </LINUX_MAKE>
