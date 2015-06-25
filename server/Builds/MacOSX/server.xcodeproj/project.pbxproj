@@ -9,16 +9,16 @@
 		506EFB930EF9A46368358304 = {isa = PBXBuildFile; fileRef = E7CD420035770CB41D07B613; };
 		A40CF5CA589D5FDF822E7A5D = {isa = PBXBuildFile; fileRef = DACD86E96255F49261BE189D; };
 		9C3A038EA386B84E91F4B5F6 = {isa = PBXBuildFile; fileRef = 468F61FD67D7B45D1FFD4D65; };
-		7A8AD46213F6B292C3DD5829 = {isa = PBXBuildFile; fileRef = 84E2F9F2F40D865E9AF17BEB; };
+		3FB0FD687DB87DE361C34878 = {isa = PBXBuildFile; fileRef = E4007C12E59A3A60D3200080; };
 		19EF215000DB811A61A6171B = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppConfig.h; path = ../../JuceLibraryCode/AppConfig.h; sourceTree = "SOURCE_ROOT"; };
 		210F674F8F5BD1F5EC5B8709 = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = server; sourceTree = "BUILT_PRODUCTS_DIR"; };
 		468F61FD67D7B45D1FFD4D65 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = "tcp_server.c"; path = "../../../common/tcp_server.c"; sourceTree = "SOURCE_ROOT"; };
-		84E2F9F2F40D865E9AF17BEB = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Main.cpp; path = ../../Source/Main.cpp; sourceTree = "SOURCE_ROOT"; };
 		A01DEABC9FD4CCA4565C2659 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "field_manager.h"; path = "../../../common/field_manager.h"; sourceTree = "SOURCE_ROOT"; };
 		A76557A6808636273F48EB9C = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "apple_pthread_barrier.h"; path = "../../../common/apple_pthread_barrier.h"; sourceTree = "SOURCE_ROOT"; };
 		B14C4A6629EDAF92285F575B = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = JuceHeader.h; path = ../../JuceLibraryCode/JuceHeader.h; sourceTree = "SOURCE_ROOT"; };
 		C553DDCF30E44F8359366672 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = common.h; path = ../../../common/common.h; sourceTree = "SOURCE_ROOT"; };
 		DACD86E96255F49261BE189D = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = "field_manager.c"; path = "../../../common/field_manager.c"; sourceTree = "SOURCE_ROOT"; };
+		E4007C12E59A3A60D3200080 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = Main.c; path = ../../Source/Main.c; sourceTree = "SOURCE_ROOT"; };
 		E7CD420035770CB41D07B613 = {isa = PBXFileReference; lastKnownFileType = file.nib; name = RecentFilesMenuTemplate.nib; path = RecentFilesMenuTemplate.nib; sourceTree = "SOURCE_ROOT"; };
 		EF8E5684088F20D6D6C4EDA7 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "tcp_server.h"; path = "../../../common/tcp_server.h"; sourceTree = "SOURCE_ROOT"; };
 		591649A7D22DC2CDB67C8702 = {isa = PBXGroup; children = (
@@ -28,7 +28,7 @@
 					A01DEABC9FD4CCA4565C2659,
 					468F61FD67D7B45D1FFD4D65,
 					EF8E5684088F20D6D6C4EDA7,
-					84E2F9F2F40D865E9AF17BEB, ); name = Source; sourceTree = "<group>"; };
+					E4007C12E59A3A60D3200080, ); name = Source; sourceTree = "<group>"; };
 		44C371BB07D63268D70E916A = {isa = PBXGroup; children = (
 					591649A7D22DC2CDB67C8702, ); name = server; sourceTree = "<group>"; };
 		F686A40CCACF06A6878C705E = {isa = PBXGroup; children = (
@@ -128,7 +128,7 @@
 		6DC45E2EE2D49C497D183A39 = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (
 					A40CF5CA589D5FDF822E7A5D,
 					9C3A038EA386B84E91F4B5F6,
-					7A8AD46213F6B292C3DD5829, ); runOnlyForDeploymentPostprocessing = 0; };
+					3FB0FD687DB87DE361C34878, ); runOnlyForDeploymentPostprocessing = 0; };
 		6519F757FFF4D67D34A25FB0 = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (  ); runOnlyForDeploymentPostprocessing = 0; };
 		ACBFC0294D927ED8BF06C61E = {isa = PBXNativeTarget; buildConfigurationList = 68A96292968C617005B96627; buildPhases = (
 					521CEA0A902309934320D169,

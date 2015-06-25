@@ -51,7 +51,7 @@ endif
 OBJECTS := \
   $(OBJDIR)/field_manager_8182bcc8.o \
   $(OBJDIR)/tcp_server_c50d2b8b.o \
-  $(OBJDIR)/Main_90ebc5c2.o \
+  $(OBJDIR)/Main_4c9ac042.o \
 
 .PHONY: clean
 
@@ -80,9 +80,9 @@ $(OBJDIR)/tcp_server_c50d2b8b.o: ../../../common/tcp_server.c
 	@echo "Compiling tcp_server.c"
 	@$(CC) $(CFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/Main_90ebc5c2.o: ../../Source/Main.cpp
+$(OBJDIR)/Main_4c9ac042.o: ../../Source/Main.c
 	-@mkdir -p $(OBJDIR)
-	@echo "Compiling Main.cpp"
-	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+	@echo "Compiling Main.c"
+	@$(CC) $(CFLAGS) -o "$@" -c "$<"
 
 -include $(OBJECTS:%.o=%.d)

@@ -12,7 +12,7 @@
       <FILE id="EXUz0h" name="field_manager.h" compile="0" resource="0" file="../common/field_manager.h"/>
       <FILE id="idbDVu" name="tcp_server.c" compile="1" resource="0" file="../common/tcp_server.c"/>
       <FILE id="DwIVKb" name="tcp_server.h" compile="0" resource="0" file="../common/tcp_server.h"/>
-      <FILE id="jWLYLD" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
+      <FILE id="jWLYLD" name="Main.c" compile="1" resource="0" file="Source/Main.c"/>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>

@@ -85,7 +85,7 @@
       <Option compile="0"/>
       <Option link="0"/>
     </Unit>
-    <Unit filename="../../Source/Main.cpp"/>
+    <Unit filename="../../Source/Main.c"/>
     <Unit filename="../../JuceLibraryCode/AppConfig.h">
       <Option compile="0"/>
       <Option link="0"/>
