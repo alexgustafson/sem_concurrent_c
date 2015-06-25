@@ -25,7 +25,7 @@
       </CONFIGURATIONS>
       <MODULEPATHS/>
     </XCODE_MAC>
-    <LINUX_MAKE targetFolder="Builds/Linux">
+    <LINUX_MAKE targetFolder="Builds/Linux" extraDefs="CC=gcc&#10;-std=c99" extraCompilerFlags="-D__USE_UNIX98">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" libraryPath="/usr/X11R6/lib/" isDebug="1" optimisation="1"
                        targetName="server"/>

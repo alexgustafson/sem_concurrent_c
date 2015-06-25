@@ -146,7 +146,7 @@ void _set_size(int n)
     }
     else if (diff < 0) // remove cells
     {
-        int i
+        int i;
         for (i = 0; i < diff; i++)
         {
             realloc(field->cells, sizeof(struct cell) * new_count);
