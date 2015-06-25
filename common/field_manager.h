@@ -20,7 +20,7 @@ extern "C" {
     #define CELL_IS_OCCUPIED = -1
     #define OUT_OF_BOUNDS = -2
     
-    int initialize_field_manager();
+    int initialize_field_manager(int size);
     void release_field_manager();
 
     void set_size(int n);

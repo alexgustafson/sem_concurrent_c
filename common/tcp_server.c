@@ -46,6 +46,7 @@ int server_is_running = 0;
 int all_sockets[255];
 char all_names[255][255];
 int game_finished = 0;
+int winner_established = 0;
 
 int say(int socket, char *s, int check_winner) {
     int result;
@@ -53,7 +54,7 @@ int say(int socket, char *s, int check_winner) {
         return 0;
     }
     
-    if (winner_callback() > -1 && check_winner > 0) {
+    if (winner_established == 1 && check_winner > 0) {
         char response[1000];
         sprintf(response, "END %s \n", all_names[winner_callback()]);
         result = send(socket, response, strlen(response), 0);
@@ -62,11 +63,26 @@ int say(int socket, char *s, int check_winner) {
     }
     
     if (result == -1)
-        fprintf(stderr, "%s: %s socket: %i \n", "Error sending message", strerror(errno));
+        fprintf(stderr, "%s: %s socket: %i \n", "Error sending message",  strerror(errno), socket);
     return result;
         
 }
 
+void *run_referee(void *arg) {
+    
+    while (!shutdown_server) {
+        if (winner_callback() > -1) {
+            winner_established = 1;
+            printf("Referee says there is a winner!\n");
+        }else{
+            winner_established = 0;
+            printf("Referee says no winner.\n");
+
+        }
+        sleep(2);
+    }
+    return NULL;
+}
 
 void *runserver(void *arg)
 {
@@ -88,24 +104,13 @@ void *runserver(void *arg)
     int idx = 0;
     
     all_sockets[idx] = listener;
+    pthread_t referee;
+    pthread_create(&referee, NULL, run_referee, NULL);
+    
     
     while (!shutdown_server) {
         server_is_running = 1;
-        //int maxfd = listener;
-        /*FD_SET(listener, &readset);
-        
-        struct timeval tv = {1, 0}; // timeout on timeval to check if server should shutdown
-        int select_return;
-        if ((select_return = select(maxfd+1, &readset, NULL, NULL, &tv)) < 0) {
-            perror("select");
-            return (void *) NULL;
-        }
-        
-        if (select_return == 0 && shutdown_server == 1) {
-            break;
-        }
-        printf("tick");
-        */
+
         int connect_d = accept(listener, (struct sockaddr *) &client_addr, &address_size);
         if (connect_d == -1){
             if (shutdown_server == 1) {
@@ -129,6 +134,7 @@ void *runserver(void *arg)
     if (all_sockets[0] > 0) {
         close(all_sockets[0]);
     }
+    pthread_join (referee, NULL);
     server_is_running = 0;
     return (void *) NULL;
 }
@@ -142,6 +148,8 @@ int startserver(int port)
     shutdown_server = 0;
     server_is_running = 0;
     game_finished = 0;
+    winner_established = 0;
+
 
     return 0;
 }
@@ -168,6 +176,8 @@ void stopserver()
     winner_callback = NULL;
 }
 
+
+
 void *handle_tcp_client(void *arg) {
     printf("SERVER: client thread started");
     
@@ -184,12 +194,13 @@ void *handle_tcp_client(void *arg) {
     all_sockets[idx] = client_socket;
     int is_joined = 0;
     
+    
     while (!shutdown_server) {
         
         /* Receive message from client */
-        command[0] = '\000';
+        command[0] = '\0';
         recv_msg_size = recv(client_socket, command, RCVBUFSIZE - 1, 0);
-        command[recv_msg_size] = '\000';
+        command[recv_msg_size] = '\0';
         
         if (recv_msg_size == 0) {
             /* zero indicates end of transmission */
@@ -211,7 +222,7 @@ void *handle_tcp_client(void *arg) {
             }
             
             int field_size = size_callback();
-            sprintf(response, "SIZE %i\n", field_size + 1);
+            sprintf(response, "SIZE %i \n", field_size);
             say(all_sockets[idx], response, 0);
             
             if (join_callback() == 0) {
@@ -237,9 +248,9 @@ void *handle_tcp_client(void *arg) {
             int success = take_callback(coords[0], coords[1], idx);
             if  (success == 1) {
                 strcpy(all_names[idx], name);
-                say(all_sockets[idx], "TAKEN\n", 1);
+                say(all_sockets[idx], "TAKEN \n", 1);
             }else {
-                say(all_sockets[idx], "INUSE\n", 1);
+                say(all_sockets[idx], "INUSE \n", 1);
             }
                         
         }else if (strncasecmp(command, "STATUS", 6)== 0)
@@ -249,11 +260,10 @@ void *handle_tcp_client(void *arg) {
             
             int player_id = status_callback(coords[0], coords[1]);
             say(all_sockets[idx], all_names[player_id], 1);
-            printf("status: %i %i = %s \n", coords[0], coords[1], all_names[player_id]);
 
         }
         
-        command[recv_msg_size] = '\000';
+        command[recv_msg_size] = '\0';
    
     }
     if (all_sockets[idx] > 0) {
@@ -261,7 +271,8 @@ void *handle_tcp_client(void *arg) {
         all_sockets[idx] = 0;
     }
     
-    return NULL;}
+    return NULL;
+}
 
 int server_running()
 {

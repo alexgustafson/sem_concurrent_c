@@ -158,6 +158,7 @@ private:
             if (recv_msg_size == 0) {
                 return 0;
             }
+            buffer[recv_msg_size] = '\0';
             if(strncasecmp(buffer, "END", 3) == 0)
             {
                 printf(buffer);

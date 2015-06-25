@@ -88,6 +88,12 @@ void TCPServerTests::FirstTest()
 void TCPServerTests::ServerTest()
 {
     beginTest("Test Server");
+    register_callbacks(always_allow_join,
+                       always_allow_leave,
+                       always_allow_take,
+                       return_4,
+                       always_status_1,
+                       never_winner);
     startserver(65002);
     Thread::sleep(5);
     stopserver();
@@ -108,7 +114,7 @@ void TCPServerTests::ConnectionTest()
     Thread::sleep(20);
 
     ScopedPointer<Client> client1 = new Client();
-    client1->setName("Client 1");
+    client1->setName("Frank");
     add_instruction(client1, "sleep", 2);
     add_instruction(client1, "join", "");
     add_instruction(client1, "sleep", 2);
@@ -151,7 +157,7 @@ void TCPServerTests::ThreePlayerTest()
     startserver(65002);
     
     ScopedPointer<Client> frank = new Client();
-    frank->setName("Client 1");
+    frank->setName("Frank");
     add_instruction(frank, "sleep", 2);
     add_instruction(frank, "join", "");
     add_instruction(frank, "sleep", 2);
@@ -168,7 +174,7 @@ void TCPServerTests::ThreePlayerTest()
     add_instruction(frank, "sleep", 2);
     
     ScopedPointer<Client> susy = new Client();
-    susy->setName("Client 2");
+    susy->setName("Susy");
     add_instruction(susy, "sleep", 5);
     add_instruction(susy, "join", "");
     add_instruction(susy, "sleep", 2);
@@ -180,7 +186,7 @@ void TCPServerTests::ThreePlayerTest()
     
     
     ScopedPointer<Client> joe = new Client();
-    susy->setName("Client 3");
+    susy->setName("Joe");
     add_instruction(joe, "sleep", 6);
     add_instruction(joe, "join", "");
     add_instruction(joe, "sleep", 2);

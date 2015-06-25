@@ -30,6 +30,7 @@ public:
     void CreateAndReleaseTests();
     void TwoPlayersSimple();
     void TwoPlayersWithDelay();
+    void ThreePlayersWithDelay();
     void runTest();
     
 private:
@@ -39,15 +40,23 @@ private:
     public:
         Client() : ThreadPoolJob("Player"){
             myName = "";
+
+        };
+        void setName(String name){
+            myName = name;
+        }
+        
+        JobStatus runJob() override{
+            
             struct sockaddr_in server_address;
             unsigned short server_port = 65002;
             
-            String server_ip = "127.0.0.1";
+            String server_ip = "0.0.0.0";
             
             sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
             if (sock == -1)
                 perror("Can't open socket");
-            
+                
             /* Construct the server address structure */
             memset(&server_address, 0, sizeof(server_address));     /* Zero out structure */
             server_address.sin_family = AF_INET;             /* Internet address family */
@@ -58,16 +67,6 @@ private:
             if (c < 0) {
                 perror("Can't connect");
             }
-        };
-        void setName(String name){
-            myName = name;
-        }
-        void setId(int pId)
-        {
-            playerId = pId;
-        }
-        
-        JobStatus runJob() override{
             
             char receive_buffer[MAX_MESSAGE_SIZE];
             
@@ -104,7 +103,7 @@ private:
                             break;
                         }
                         if(strncasecmp(receive_buffer, "START\n", 4) == 0){
-                            printf("starting\n");
+                            Logger::writeToLog(myName + " starting " );
                         }
                         
                     }else if (strncasecmp(receive_buffer, "NACK\n", 4) == 0)
@@ -126,7 +125,7 @@ private:
                         /* zero indicates end of transmission */
                         break;
                     }
-                    Logger::writeToLog(String::formatted(String("%s recieved response %s \n"),name.toRawUTF8(), receive_buffer ));
+                    Logger::writeToLog(String::formatted(String("%s recieved response %s \n"),myName.toRawUTF8(), receive_buffer ));
                     
                 }else if (cmd == "status")
                 {
@@ -139,8 +138,11 @@ private:
                         /* zero indicates end of transmission */
                         break;
                     }
+                    Logger::writeToLog(String::formatted(String("%s recieved response %s \n"),myName.toRawUTF8(), receive_buffer ));
+
                 }
             }
+            close(sock);
             Logger::writeToLog(myName + " shutting down\n" );
             return jobHasFinished;
         }
@@ -158,6 +160,7 @@ private:
             if (recv_msg_size == 0) {
                 return 0;
             }
+            buffer[recv_msg_size] = '\0';
             if(strncasecmp(buffer, "END", 3) == 0)
             {
                 printf(buffer);
@@ -169,7 +172,6 @@ private:
         OwnedArray<NamedValueSet> instructions;
     private:
         String myName;
-        int playerId;
         int sock;
         
     };

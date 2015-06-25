@@ -3,7 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <pthread.h>
+
+#ifdef __APPLE__
 #include "apple_pthread_barrier.h"
+#endif
 
 #include <unistd.h>
 
@@ -17,19 +20,26 @@ struct cell {
 
 struct field {
     pthread_rwlock_t field_lock;
-    pthread_barrier_t min_player_lock;
     struct cell* cells;
 };
 
 int dim = 0;
+int min_players;
+int player_count = 0;
 int delay = 0;
+int join_countdown = 10000;
 struct field* field;
 
 void request_global_lock();
 void release_global_lock();
 
-int initialize_field_manager()
+pthread_cond_t join_ready = PTHREAD_COND_INITIALIZER;
+pthread_mutex_t join_lock = PTHREAD_MUTEX_INITIALIZER;
+
+int initialize_field_manager(int size)
 {
+    join_countdown = size/2;
+    
     field = malloc(sizeof(struct field));
     field->cells = NULL;
     if (pthread_rwlock_init(&field->field_lock, NULL) != 0)
@@ -37,13 +47,12 @@ int initialize_field_manager()
         perror("could not initialize field lock");
         return NULL;
     }
-    if (pthread_barrier_init(&field->min_player_lock, NULL, 2) != 0)
-    {
-        perror("could not minimum player lock");
-        return NULL;
-    }
+
     dim = 0;
     delay = 0;
+    set_size(size);
+    
+    player_count = 0;
     return 1;
 }
 
@@ -59,9 +68,10 @@ void release_field_manager()
     free(field);
     release_global_lock();
     pthread_rwlock_destroy(&field->field_lock);
-    pthread_barrier_destroy(&field->min_player_lock);
     dim = 0;
     delay = 0;
+    join_countdown = 10000;
+
 }
 
 void request_global_lock()
@@ -142,6 +152,7 @@ void _set_size(int n)
         }
     }
     dim = n;
+    min_players = dim / 2;
 }
 
 void set_size(int n)
@@ -211,7 +222,7 @@ struct cell* get_cell(int x, int y)
 int take_cell(int x, int y, int player_id)
 {
     int respsonse;
-    request_global_read();
+    //request_global_read();
     int result = request_cell_lock(x, y);
     if (result == 0)
     {
@@ -223,7 +234,7 @@ int take_cell(int x, int y, int player_id)
         respsonse= result;
     }
 
-    release_global_read();
+    //release_global_read();
     return respsonse;
 }
 
@@ -234,18 +245,21 @@ int get_cell_player(int x, int y)
 
 int join_game()
 {
-    increment_size();
-    if (dim < 3) {
-        pthread_barrier_wait(&field->min_player_lock);
-    }
+    pthread_mutex_lock(&join_lock);
+    if (--join_countdown > 0)
+        pthread_cond_wait(&join_ready, &join_lock);
+    pthread_mutex_unlock(&join_lock);
+    pthread_cond_signal(&join_ready);
+    
     return 0;
 }
 
 int leave_game()
 {
-    decrement_size();
-    if (dim < 2) {
-        //TODO : re-init the barrier mutex with the correct number
+
+    player_count--;
+    if (player_count < 1) {
+        release_field_manager();
     }
     return 0;
 }

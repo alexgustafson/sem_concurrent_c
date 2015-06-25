@@ -19,12 +19,13 @@
 class FieldManagerTests : public UnitTest
 {
 public:
-    FieldManagerTests() : UnitTest("") {}
+    FieldManagerTests() : UnitTest("") { pool = new ThreadPool(10);}
     
     void FirstTest();
     void CreateAndReleaseTests();
     void TestField();
     void concurrentJoin();
+    void atLeast8PlayersMustJoin();
     void concurrentPlaying();
     void concurrentPlayingAndLeaving();
     void runTest();
@@ -100,7 +101,8 @@ private:
         int playerId;
     };
     
-    ThreadPool pool;
+    //ThreadPool pool;
+    ScopedPointer<ThreadPool> pool;
     NamedValueSet* add_instruction(Player *player, const Identifier &inst, const var &parameter);
 
     

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="ik0PrG" name="server" projectType="consoleapp" version="1.0.0"
+              bundleIdentifier="com.yourcompany.server" includeBinaryInAppConfig="1"
+              jucerVersion="3.1.1">
+  <MAINGROUP id="vW5WAw" name="server">
+    <GROUP id="{4638A1C8-2B3A-C14F-6719-D9D9EC63FE8B}" name="Source">
+      <FILE id="xlCuCF" name="apple_pthread_barrier.h" compile="0" resource="0"
+            file="../common/apple_pthread_barrier.h"/>
+      <FILE id="L2jBXJ" name="common.h" compile="0" resource="0" file="../common/common.h"/>
+      <FILE id="qESc9e" name="field_manager.c" compile="1" resource="0" file="../common/field_manager.c"/>
+      <FILE id="EXUz0h" name="field_manager.h" compile="0" resource="0" file="../common/field_manager.h"/>
+      <FILE id="idbDVu" name="tcp_server.c" compile="1" resource="0" file="../common/tcp_server.c"/>
+      <FILE id="DwIVKb" name="tcp_server.h" compile="0" resource="0" file="../common/tcp_server.h"/>
+      <FILE id="jWLYLD" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
+    </GROUP>
+  </MAINGROUP>
+  <EXPORTFORMATS>
+    <XCODE_MAC targetFolder="Builds/MacOSX">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" osxSDK="default" osxCompatibility="default" osxArchitecture="default"
+                       isDebug="1" optimisation="1" targetName="server"/>
+        <CONFIGURATION name="Release" osxSDK="default" osxCompatibility="default" osxArchitecture="default"
+                       isDebug="0" optimisation="3" targetName="server"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS/>
+    </XCODE_MAC>
+    <LINUX_MAKE targetFolder="Builds/Linux">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" libraryPath="/usr/X11R6/lib/" isDebug="1" optimisation="1"
+                       targetName="server"/>
+        <CONFIGURATION name="Release" libraryPath="/usr/X11R6/lib/" isDebug="0" optimisation="3"
+                       targetName="server"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS/>
+    </LINUX_MAKE>
+    <CODEBLOCKS targetFolder="Builds/CodeBlocks">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="server"/>
+        <CONFIGURATION name="Release" isDebug="0" optimisation="3" targetName="server"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS/>
+    </CODEBLOCKS>
+  </EXPORTFORMATS>
+  <MODULES/>
+  <JUCEOPTIONS/>
+</JUCERPROJECT>
