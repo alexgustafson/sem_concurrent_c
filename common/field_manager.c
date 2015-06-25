@@ -59,7 +59,8 @@ int initialize_field_manager(int size)
 void release_field_manager()
 {
     request_global_lock();
-    for (int i = 0; i < (dim*dim); i++)
+    int i;
+    for (i = 0; i < (dim*dim); i++)
     {
         struct cell tmpcell = field->cells[i];
         pthread_mutex_destroy(&tmpcell.cell_lock);
@@ -112,8 +113,8 @@ struct cell * create_new_cells(int n)
     struct cell *new_cells = malloc(sizeof(struct cell) * n);
     if (new_cells == NULL)
         perror("out of memory");
-    
-    for (int i = 0; i < n ; i++) {
+    int i;
+    for (i = 0; i < n ; i++) {
         
         new_cells[i].player_id = -1;
         if (pthread_mutex_init(&new_cells[i].cell_lock, NULL) != 0)
@@ -145,8 +146,8 @@ void _set_size(int n)
     }
     else if (diff < 0) // remove cells
     {
-        
-        for (int i = 0; i < diff; i++)
+        int i
+        for (i = 0; i < diff; i++)
         {
             realloc(field->cells, sizeof(struct cell) * new_count);
         }
@@ -280,7 +281,8 @@ int is_there_a_winner()
     
     struct cell cell = field->cells[0];
     int winning_player = cell.player_id;
-    for (int i = 1; i < (dim * dim); i++) {
+    int i;
+    for (i = 1; i < (dim * dim); i++) {
         
         struct cell next_cell = field->cells[i];
         if (next_cell.player_id == winning_player) {

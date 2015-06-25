@@ -157,14 +157,15 @@ int startserver(int port)
 void stopserver()
 {
     shutdown_server = 1;
-    for (int i = 0; i < 256; i++) {
+    int i;
+    for (i = 0; i < 256; i++) {
         if (all_sockets[i] > 0) {
             close(all_sockets[i]);
             all_sockets[i] = 0;
         }
     }
     
-    for (int i = 0; i < 256; i++)
+    for (i = 0; i < 256; i++)
     {
         strcpy(all_names[i], "");
     }
@@ -280,7 +281,8 @@ int server_running()
 }
 
 void send_to_all_sockets( char* message) {
-    for (int i = 1; i < 256; i++) {
+    int i;
+    for ( i = 1; i < 256; i++) {
         if (all_sockets[i] > 0) {
             say(all_sockets[i], message, 0);
         }
