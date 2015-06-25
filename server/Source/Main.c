@@ -12,16 +12,21 @@
 #include "field_manager.h"
 #include "tcp_server.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 //==============================================================================
 int main (int argc, char* argv[])
 {
-
+    int port = 65002, size = 4 ;
+    if (argc == 3) {
+        port = atoi(argv[1]);
+        size = atoi(argv[2]);
+    }
     
-        initialize_field_manager(4);
-        startserver(65002);
+    initialize_field_manager(4);
+    startserver(port);
         
-        register_callbacks(join_game,
+    register_callbacks(join_game,
                            leave_game,
                            take_cell,
                            get_size,
@@ -29,11 +34,9 @@ int main (int argc, char* argv[])
                            is_there_a_winner);
         
 
-        getchar();
-        stopserver();
-        release_field_manager();
+    getchar();
+    stopserver();
+    release_field_manager();
     
-    return 0;
-
     return 0;
 }
