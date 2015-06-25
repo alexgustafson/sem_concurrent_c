@@ -15,7 +15,7 @@
 extern "C" {
 #endif
 
-#import <sys/errno.h>
+#include <sys/errno.h>
 #include <sys/uio.h>
 #include <sys/fcntl.h>
 #include <signal.h>

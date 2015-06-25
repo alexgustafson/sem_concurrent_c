@@ -45,7 +45,7 @@ int initialize_field_manager(int size)
     if (pthread_rwlock_init(&field->field_lock, NULL) != 0)
     {
         perror("could not initialize field lock");
-        return NULL;
+        return -1;
     }
 
     dim = 0;
