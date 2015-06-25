@@ -19,7 +19,7 @@
 #include <unistd.h>
 #include <stdio.h>
 
-#define MAX_MESSAGE_SIZE 1000
+#define MAX_MESSAGE_SIZE 256
 
 class ConsolidatedTests : public UnitTest
 {

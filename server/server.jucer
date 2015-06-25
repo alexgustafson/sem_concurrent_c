@@ -34,13 +34,6 @@
       </CONFIGURATIONS>
       <MODULEPATHS/>
     </LINUX_MAKE>
-    <CODEBLOCKS targetFolder="Builds/CodeBlocks">
-      <CONFIGURATIONS>
-        <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="server"/>
-        <CONFIGURATION name="Release" isDebug="0" optimisation="3" targetName="server"/>
-      </CONFIGURATIONS>
-      <MODULEPATHS/>
-    </CODEBLOCKS>
   </EXPORTFORMATS>
   <MODULES/>
   <JUCEOPTIONS/>
