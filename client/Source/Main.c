@@ -56,7 +56,13 @@ int main (int argc, char* argv[])
                 if (recv_msg_size == 0) {
                     return 0;
                 }
-                printf(receive_buffer);
+                fprintf(stderr,"%s", receive_buffer);
+                fprintf(stderr,"waiting for game to start\n");
+                
+                recv_msg_size = recv(sock, receive_buffer, 256, 0);
+                if (recv_msg_size == 0) {
+                    return 0;
+                }
                 
                 if (strncasecmp(receive_buffer, "NACK\n", 4) == 0) {
                     shutdown = 1;
@@ -73,7 +79,7 @@ int main (int argc, char* argv[])
                 if (recv_msg_size == 0) {
                     return 0;
                 }
-                printf(receive_buffer);
+                fprintf(stderr,receive_buffer, "");
                 
                 if (strncasecmp(receive_buffer, "END ", 3) == 0) {
                     shutdown = 1;
