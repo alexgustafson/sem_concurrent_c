@@ -23,7 +23,7 @@ ifeq ($(CONFIG),Debug)
   CXXFLAGS += $(CFLAGS)
   LDFLAGS += $(TARGET_ARCH) -L$(BINDIR) -L$(LIBDIR) -L/usr/X11R6/lib/ 
 
-  TARGET := server
+  TARGET := client
   BLDCMD = $(CXX) -o $(OUTDIR)/$(TARGET) $(OBJECTS) $(LDFLAGS) $(RESOURCES) $(TARGET_ARCH)
   CLEANCMD = rm -rf $(OUTDIR)/$(TARGET) $(OBJDIR)
 endif
@@ -43,42 +43,30 @@ ifeq ($(CONFIG),Release)
   CXXFLAGS += $(CFLAGS)
   LDFLAGS += $(TARGET_ARCH) -L$(BINDIR) -L$(LIBDIR) -fvisibility=hidden -L/usr/X11R6/lib/ 
 
-  TARGET := server
+  TARGET := client
   BLDCMD = $(CXX) -o $(OUTDIR)/$(TARGET) $(OBJECTS) $(LDFLAGS) $(RESOURCES) $(TARGET_ARCH)
   CLEANCMD = rm -rf $(OUTDIR)/$(TARGET) $(OBJDIR)
 endif
 
 OBJECTS := \
-  $(OBJDIR)/field_manager_8182bcc8.o \
-  $(OBJDIR)/tcp_server_c50d2b8b.o \
   $(OBJDIR)/Main_4c9ac042.o \
 
 .PHONY: clean
 
 $(OUTDIR)/$(TARGET): $(OBJECTS) $(RESOURCES)
-	@echo Linking server
+	@echo Linking client
 	-@mkdir -p $(BINDIR)
 	-@mkdir -p $(LIBDIR)
 	-@mkdir -p $(OUTDIR)
 	@$(BLDCMD)
 
 clean:
-	@echo Cleaning server
+	@echo Cleaning client
 	@$(CLEANCMD)
 
 strip:
-	@echo Stripping server
+	@echo Stripping client
 	-@strip --strip-unneeded $(OUTDIR)/$(TARGET)
-
-$(OBJDIR)/field_manager_8182bcc8.o: ../../../common/field_manager.c
-	-@mkdir -p $(OBJDIR)
-	@echo "Compiling field_manager.c"
-	@$(CC) $(CFLAGS) -o "$@" -c "$<"
-
-$(OBJDIR)/tcp_server_c50d2b8b.o: ../../../common/tcp_server.c
-	-@mkdir -p $(OBJDIR)
-	@echo "Compiling tcp_server.c"
-	@$(CC) $(CFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/Main_4c9ac042.o: ../../Source/Main.c
 	-@mkdir -p $(OBJDIR)
