@@ -251,7 +251,7 @@ int join_game()
         pthread_cond_wait(&join_ready, &join_lock);
     pthread_mutex_unlock(&join_lock);
     pthread_cond_signal(&join_ready);
-    
+    sleep(2);
     return 0;
 }
 

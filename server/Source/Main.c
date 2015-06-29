@@ -24,15 +24,17 @@ int main (int argc, char* argv[])
     }
     
     initialize_field_manager(4);
+
+    register_callbacks(join_game,
+                       leave_game,
+                       take_cell,
+                       get_size,
+                       get_cell_player,
+                       is_there_a_winner);
+
     startserver(port);
         
-    register_callbacks(join_game,
-                           leave_game,
-                           take_cell,
-                           get_size,
-                           get_cell_player,
-                           is_there_a_winner);
-        
+
 
     getchar();
     stopserver();

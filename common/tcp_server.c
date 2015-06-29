@@ -213,6 +213,11 @@ void *handle_tcp_client(void *arg) {
         if (shutdown_server) {
             break;
         }
+
+        if (winner_established == 1) {
+            say(all_sockets[idx], "END\n", 0);
+            continue;
+        }
         
         if(strncasecmp(command, "HELLO\n", 5) == 0)
         {
