@@ -298,10 +298,11 @@ void FieldManagerTests::concurrentPlaying()
     {
         Thread::sleep(1);
     }
-    
+    Logger::writeToLog("thread pool finished");
     expectEquals(get_size(), 16);
     expectEquals(is_there_a_winner(), 4);
     release_field_manager();
+    Logger::writeToLog("field manager released");
     Thread::sleep(100);
 }
 
