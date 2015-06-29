@@ -40,25 +40,7 @@ private:
     public:
         Client() : ThreadPoolJob("Player"){
             myName = "";
-            struct sockaddr_in server_address;
-            unsigned short server_port = 65002;
-            
-            String server_ip = "127.0.0.1";
-            
-            sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-            if (sock == -1)
-                perror("Can't open socket");
-            
-            /* Construct the server address structure */
-            memset(&server_address, 0, sizeof(server_address));     /* Zero out structure */
-            server_address.sin_family = AF_INET;             /* Internet address family */
-            server_address.sin_addr.s_addr = inet_addr(server_ip.getCharPointer());   /* Server IP address */
-            server_address.sin_port = htons(server_port); /* Server port: htons host to network byte order */
-            
-            int c = connect(sock, (struct sockaddr *) &server_address, sizeof(server_address));
-            if (c < 0) {
-                perror("Can't connect");
-            }
+
         };
         void setName(String name){
             myName = name;
@@ -69,6 +51,26 @@ private:
         }
         
         JobStatus runJob() override{
+            
+            struct sockaddr_in server_address;
+            unsigned short server_port = 65002;
+            
+            String server_ip = "127.0.0.1";
+            
+            sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+            if (sock == -1)
+                perror("Can't open socket");
+                
+            /* Construct the server address structure */
+                memset(&server_address, 0, sizeof(server_address));     /* Zero out structure */
+                server_address.sin_family = AF_INET;             /* Internet address family */
+            server_address.sin_addr.s_addr = inet_addr(server_ip.getCharPointer());   /* Server IP address */
+            server_address.sin_port = htons(server_port); /* Server port: htons host to network byte order */
+            
+            int c = connect(sock, (struct sockaddr *) &server_address, sizeof(server_address));
+            if (c < 0) {
+                perror("Can't connect");
+            }
             
             char receive_buffer[MAX_MESSAGE_SIZE];
             

@@ -217,9 +217,9 @@ void TCPServerTests::runTest()
 {
     FirstTest();
     ServerTest();
-    Thread::sleep(5);
-    //ConnectionTest();
-    Thread::sleep(15);
+    Thread::sleep(100);
+    ConnectionTest();
+    Thread::sleep(100);
     ThreePlayerTest();
 }
 
