@@ -360,7 +360,7 @@ void ConsolidatedTests::ThreePlayersWithDelay()
     {
         Thread::sleep(100);
     }
-    /*
+    
     stopserver();
     while( server_running() > 0)
     {
@@ -368,7 +368,7 @@ void ConsolidatedTests::ThreePlayersWithDelay()
     }
     release_field_manager();
     Thread::sleep(1000);
-    */
+    
 }
 
 
