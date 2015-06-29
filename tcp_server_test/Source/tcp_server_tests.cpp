@@ -95,7 +95,7 @@ void TCPServerTests::ServerTest()
                        always_status_1,
                        never_winner);
     startserver(65002);
-    Thread::sleep(5);
+    Thread::sleep(50);
     stopserver();
 }
 
@@ -217,9 +217,9 @@ void TCPServerTests::runTest()
 {
     FirstTest();
     ServerTest();
-    Thread::sleep(100);
+    Thread::sleep(1000);
     ConnectionTest();
-    Thread::sleep(100);
+    Thread::sleep(1000);
     ThreePlayerTest();
 }
 
