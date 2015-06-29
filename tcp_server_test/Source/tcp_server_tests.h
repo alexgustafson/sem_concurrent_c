@@ -17,6 +17,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <cerrno>
 
 #define MAX_MESSAGE_SIZE 1000
 
