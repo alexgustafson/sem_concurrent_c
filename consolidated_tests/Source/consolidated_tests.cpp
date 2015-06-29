@@ -249,7 +249,7 @@ void ConsolidatedTests::TwoPlayersWithDelay()
 void ConsolidatedTests::ThreePlayersWithDelay()
 {
     beginTest("Three Players with Delay");
-    /*
+    
     initialize_field_manager(4);
     startserver(65002);
     set_delay(1);
@@ -260,7 +260,7 @@ void ConsolidatedTests::ThreePlayersWithDelay()
                        get_cell_player,
                        is_there_a_winner);
     
-    */
+    
     ScopedPointer<Client> frank = new Client();
     frank->setName("Frank");
     add_instruction(frank, "sleep", 10);
