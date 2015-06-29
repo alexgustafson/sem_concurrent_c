@@ -95,7 +95,7 @@ private:
                     }
                     fprintf(stderr, "%s", receive_buffer);
                     if(strncasecmp(receive_buffer, "SIZE n\n", 4) == 0){
-                        printf("conneted to game, waiting for start\n");
+                        Logger::writeToLog(String::formatted(String("%s conneted to game, waiting for start\n"),myName.toRawUTF8(), receive_buffer ));
                         
                         int sz = rec(receive_buffer);
                         if (sz < 1) {
@@ -103,6 +103,7 @@ private:
                             break;
                         }
                         if(strncasecmp(receive_buffer, "START\n", 4) == 0){
+                            Logger::writeToLog(String::formatted(String("%s recieved response %s \n"),myName.toRawUTF8(), receive_buffer ));
                             Logger::writeToLog(myName + " starting " );
                         }
                         

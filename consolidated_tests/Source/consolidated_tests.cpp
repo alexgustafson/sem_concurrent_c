@@ -333,7 +333,7 @@ void ConsolidatedTests::ThreePlayersWithDelay()
     instruction->set("y", 1);
     
     ScopedPointer<Client> joe = new Client();
-    frank->setName("Joe");
+    joe->setName("Joe");
     add_instruction(joe, "sleep", 14);
     add_instruction(joe, "join", "");
     
