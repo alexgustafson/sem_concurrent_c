@@ -93,7 +93,7 @@ private:
                         /* zero indicates end of transmission */
                         break;
                     }
-                    printf("%s", receive_buffer);
+                    fprintf(stderr, "%s", receive_buffer);
                     if(strncasecmp(receive_buffer, "SIZE n\n", 4) == 0){
                         printf("conneted to game, waiting for start\n");
                         
@@ -163,7 +163,7 @@ private:
             buffer[recv_msg_size] = '\0';
             if(strncasecmp(buffer, "END", 3) == 0)
             {
-                printf(buffer);
+                fprintf(stderr, "%s", buffer);
                 return -1;
             }
             return 1;
