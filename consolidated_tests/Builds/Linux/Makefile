@@ -49,9 +49,9 @@ ifeq ($(CONFIG),Release)
 endif
 
 OBJECTS := \
-  $(OBJDIR)/consolidated_tests_6f8369c6.o \
   $(OBJDIR)/field_manager_8182bcc8.o \
   $(OBJDIR)/tcp_server_c50d2b8b.o \
+  $(OBJDIR)/consolidated_tests_6f8369c6.o \
   $(OBJDIR)/Main_90ebc5c2.o \
   $(OBJDIR)/juce_core_28ba299e.o \
   $(OBJDIR)/juce_data_structures_2a02f2da.o \
