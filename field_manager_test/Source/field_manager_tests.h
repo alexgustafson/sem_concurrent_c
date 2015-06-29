@@ -13,7 +13,7 @@
 
 #include "JuceHeader.h"
 #include "field_manager.h"
-
+#include <unistd.h>
 
 
 class FieldManagerTests : public UnitTest
