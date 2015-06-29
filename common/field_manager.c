@@ -72,6 +72,7 @@ void release_field_manager()
     dim = 0;
     delay = 0;
     join_countdown = 10000;
+    
 
 }
 
@@ -223,7 +224,7 @@ struct cell* get_cell(int x, int y)
 int take_cell(int x, int y, int player_id)
 {
     int respsonse;
-    //request_global_read();
+    request_global_read();
     int result = request_cell_lock(x, y);
     if (result == 0)
     {
@@ -235,7 +236,7 @@ int take_cell(int x, int y, int player_id)
         respsonse= result;
     }
 
-    //release_global_read();
+    release_global_read();
     return respsonse;
 }
 
@@ -260,7 +261,7 @@ int leave_game()
 
     player_count--;
     if (player_count < 1) {
-        release_field_manager();
+        //release_field_manager();
     }
     return 0;
 }
