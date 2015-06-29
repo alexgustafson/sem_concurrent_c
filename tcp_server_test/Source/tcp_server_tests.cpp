@@ -216,10 +216,10 @@ void TCPServerTests::ThreePlayerTest()
 void TCPServerTests::runTest()
 {
     FirstTest();
-    ServerTest();
-    Thread::sleep(1000);
-    ConnectionTest();
-    Thread::sleep(1000);
+    //ServerTest();
+    //Thread::sleep(1000);
+    //ConnectionTest();
+    //Thread::sleep(1000);
     ThreePlayerTest();
 }
 
