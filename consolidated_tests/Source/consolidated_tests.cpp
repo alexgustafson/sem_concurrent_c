@@ -375,9 +375,9 @@ void ConsolidatedTests::ThreePlayersWithDelay()
 void ConsolidatedTests::runTest()
 {
     FirstTest();
-    CreateAndReleaseTests();
-    TwoPlayersSimple();
-    TwoPlayersWithDelay();
+    //CreateAndReleaseTests();
+    //TwoPlayersSimple();
+    //TwoPlayersWithDelay();
     ThreePlayersWithDelay();
 
 }
