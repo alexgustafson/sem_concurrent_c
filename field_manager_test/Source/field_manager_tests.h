@@ -93,6 +93,8 @@ private:
                 
                 }
             }
+            Logger::writeToLog(myName + " finished all tasks." );
+
             return jobHasFinished;
         }
         OwnedArray<NamedValueSet> instructions;

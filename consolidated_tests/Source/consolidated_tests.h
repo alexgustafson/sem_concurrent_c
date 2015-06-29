@@ -144,6 +144,7 @@ private:
                 }
             }
             close(sock);
+            Logger::writeToLog(myName + " finished all tasks." );
             Logger::writeToLog(myName + " shutting down\n" );
             return jobHasFinished;
         }
