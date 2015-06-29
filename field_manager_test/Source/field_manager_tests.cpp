@@ -303,7 +303,7 @@ void FieldManagerTests::concurrentPlaying()
     expectEquals(is_there_a_winner(), 4);
     release_field_manager();
     Logger::writeToLog("field manager released");
-    Thread::sleep(100);
+    Thread::sleep(20);
 }
 
 void FieldManagerTests::concurrentPlayingAndLeaving()
