@@ -74,11 +74,6 @@ strip:
 	@echo Stripping consolidated_tests
 	-@strip --strip-unneeded $(OUTDIR)/$(TARGET)
 
-$(OBJDIR)/consolidated_tests_6f8369c6.o: ../../Source/consolidated_tests.cpp
-	-@mkdir -p $(OBJDIR)
-	@echo "Compiling consolidated_tests.cpp"
-	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-
 $(OBJDIR)/field_manager_8182bcc8.o: ../../../common/field_manager.c
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling field_manager.c"
@@ -88,6 +83,12 @@ $(OBJDIR)/tcp_server_c50d2b8b.o: ../../../common/tcp_server.c
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling tcp_server.c"
 	@$(CC) $(CFLAGS) -o "$@" -c "$<"
+
+
+$(OBJDIR)/consolidated_tests_6f8369c6.o: ../../Source/consolidated_tests.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling consolidated_tests.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/Main_90ebc5c2.o: ../../Source/Main.cpp
 	-@mkdir -p $(OBJDIR)
