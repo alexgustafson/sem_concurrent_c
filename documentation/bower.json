@@ -1,0 +1,22 @@
+{
+  "name": "concurrent c seminar arbeit",
+  "version": "0.0.1",
+  "authors": [
+    "Alex Gustafson <alex.gustafson@netzbarkeit.ch>"
+  ],
+  "description": "paper",
+  "main": "index.html",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery.columnizer": "~1.6.2",
+    "normalize.css": "~3.0.3"
+  }
+}

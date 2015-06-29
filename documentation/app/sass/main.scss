@@ -1,0 +1,178 @@
+
+body {
+  font-family: serif;
+}
+
+.page {
+  width: 650px;
+  height: 958px;
+  //border: 1px solid black;
+  margin: 20px;
+  position: relative;
+}
+
+.page .content .column {
+  font-size: 10pt;
+}
+
+.page .content .column blockquote, pre {
+  -webkit-margin-before: 1em;
+  -webkit-margin-after: 1em;
+  -webkit-margin-start: 0px;
+  -webkit-margin-end: 0px;
+  background: #DEDEDE;
+  padding: 2px;
+  clear: both;
+  font-family: monospace;
+  font-size: 0.6rem;
+  p {
+    padding: 0;
+    margin: 0;
+    font-size: 0.6rem;
+
+  }
+}
+
+.page .content .last.column {
+  box-sizing: border-box;
+  padding-left: 10px;
+}
+
+.page .content .column img {
+  float: left;
+  margin: 10px;
+}
+
+.page .content .column p {
+  padding: 0 0px;
+  margin: 10px 0;
+}
+
+.page .content .column h1, h2, h3, h4 {
+  padding: 0 0;
+  -webkit-margin-before: 0.8em;
+  -webkit-margin-after: 0.4em;
+  -webkit-margin-start: 0px;
+  -webkit-margin-end: 0px;
+}
+
+h1 {
+  font-size: 1.4rem;
+}
+h2 {
+  font-size: 1.3rem;
+}
+h3 {
+  font-size: 1.2rem;
+}
+
+h3 {
+  font-size: 1.1rem;
+}
+
+.page .header {
+  text-align: center;
+  font-size: 18pt;
+  padding: 20px 0 0;
+  padding-bottom: 40px;
+}
+
+.page .header hr, .page .footer hr {
+  width: 400px;
+}
+
+.page .footer {
+  text-align: center;
+  font-size: 0.8rem;
+}
+
+.page .footer span {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+
+.page_template, .cover_template {
+  display: none;
+}
+
+.enclosure {
+  //border: 1px dashed black
+}
+
+ul, li {
+  margin-left: 0px;
+  padding-left: 0px;
+  //list-style-position: inside;
+  //overflow: hidden;
+}
+
+li {
+  padding-top: 8px;
+}
+
+ul {
+  margin-left: 16px;
+  -webkit-margin-before: 0;
+  -webkit-margin-after: 0;
+  -webkit-margin-end: 0px;
+  -webkit-padding-start: 0;
+  ul {
+    margin-left: 8px;
+    list-style: none;
+  }
+}
+
+span.mono{
+  font-family: monospace, monospace;
+  color: blue;
+}
+
+@media print {
+  .page .content .column blockquote {
+    background-color: #DEDEDE;
+    -webkit-print-color-adjust: exact;
+
+  }
+}
+
+.figtitle {
+  font-weight: bold;
+  font-size: 0.6rem;
+  text-align: center;
+}
+
+.ft_left {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  text-align: left;
+}
+
+.cover_template.page {
+  .content {
+    .header {
+      .address {
+        float: left;
+        text-align: left;
+        font-size: 0.8rem;
+        font-weight: bold;
+
+      }
+
+      img.logo {
+        float: right;
+        margin: 0;
+        max-width: 120px;
+      }
+    }
+
+
+    .title {
+      padding-top: 220px;
+      text-align: center;
+
+    }
+
+  }
+}
