@@ -300,6 +300,3 @@ int is_there_a_winner()
 
 
 
-
-
-

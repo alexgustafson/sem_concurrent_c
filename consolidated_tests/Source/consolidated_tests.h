@@ -103,7 +103,7 @@ private:
                             break;
                         }
                         if(strncasecmp(receive_buffer, "START\n", 4) == 0){
-                            Logger::writeToLog(String::formatted(String("%s recieved response %s \n"),myName.toRawUTF8(), receive_buffer ));
+                            Logger::writeToLog(String::formatted(String("%s recieved response %s"),myName.toRawUTF8(), receive_buffer ));
                             Logger::writeToLog(myName + " starting " );
                         }
                         
@@ -119,27 +119,27 @@ private:
                     int x = instruction->getWithDefault("x", 1);
                     int y = instruction->getWithDefault("y", 1);
                     String name = instruction->getWithDefault("name", "");
-                    send_string(String::formatted(String("TAKE %i %i %s\n"), x, y, name.toRawUTF8() ) );
+                    send_string(String::formatted(String("TAKE %i %i %s"), x, y, name.toRawUTF8() ) );
                     
                     int sz = rec(receive_buffer);
                     if (sz < 1) {
                         /* zero indicates end of transmission */
                         break;
                     }
-                    Logger::writeToLog(String::formatted(String("%s recieved response %s \n"),myName.toRawUTF8(), receive_buffer ));
+                    Logger::writeToLog(String::formatted(String("%s recieved response %s"),myName.toRawUTF8(), receive_buffer ));
                     
                 }else if (cmd == "status")
                 {
                     int x = instruction->getWithDefault("x", 1);
                     int y = instruction->getWithDefault("y", 1);
                     
-                    send_string(String::formatted(String("STATUS %i %i\n"), x, y ) );
+                    send_string(String::formatted(String("STATUS %i %i"), x, y ) );
                     int sz = rec(receive_buffer);
                     if (sz < 1) {
                         /* zero indicates end of transmission */
                         break;
                     }
-                    Logger::writeToLog(String::formatted(String("%s recieved response %s \n"),myName.toRawUTF8(), receive_buffer ));
+                    Logger::writeToLog(String::formatted(String("%s recieved response %s"),myName.toRawUTF8(), receive_buffer ));
 
                 }
             }

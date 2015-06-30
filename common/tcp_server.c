@@ -180,7 +180,7 @@ void stopserver()
 
 
 void *handle_tcp_client(void *arg) {
-    printf("SERVER: client thread started");
+    printf("SERVER: client thread started\n");
     
     struct thread_arg *thread_data = (struct thread_arg *)arg;
 
