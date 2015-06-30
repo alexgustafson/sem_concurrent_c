@@ -40,7 +40,12 @@ body {
 
 .page .content .column img {
   float: left;
-  margin: 10px;
+  max-width: 100%;
+  box-sizing: border-box;
+  background-color: #DEDEDE;
+  padding: 10px 50px 10px 50px;
+  margin: 0;
+  margin-bottom: 5px;
 }
 
 .page .content .column p {
@@ -59,9 +64,11 @@ body {
 h1 {
   font-size: 1.4rem;
 }
+
 h2 {
   font-size: 1.3rem;
 }
+
 h3 {
   font-size: 1.2rem;
 }
@@ -123,13 +130,20 @@ ul {
   }
 }
 
-span.mono{
+span.mono {
   font-family: monospace, monospace;
   color: blue;
 }
 
 @media print {
   .page .content .column blockquote {
+    background-color: #DEDEDE;
+    -webkit-print-color-adjust: exact;
+
+  }
+
+  .page .content .column img {
+
     background-color: #DEDEDE;
     -webkit-print-color-adjust: exact;
 
@@ -147,6 +161,20 @@ span.mono{
   bottom: 10px;
   left: 10px;
   text-align: left;
+}
+.ft_right {
+   position: absolute;
+   bottom: 10px;
+   right: 10px;
+   text-align: right;
+ }
+
+.ft_mid {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  right: 0;
+  text-align: center;
 }
 
 .cover_template.page {
@@ -167,7 +195,6 @@ span.mono{
       }
     }
 
-
     .title {
       padding-top: 220px;
       text-align: center;
@@ -176,3 +203,25 @@ span.mono{
 
   }
 }
+
+
+  .page {
+
+    .header.handout {
+      font-size: 1.0em;
+      padding: 0;
+      margin: 0;
+
+      h2 {
+        margin: 0;
+        padding: 0;
+      }
+
+      p{
+        margin: 0;
+        padding: 0;
+        padding-bottom: 20px;
+      }
+    }
+  }
+

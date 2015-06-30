@@ -6,6 +6,7 @@ $(function () {
         if ($('#coverPage').contents().length > 0) {
             $page = $(".cover_template:first").clone().addClass("page").css("display", "block");
             $("body").append($page);
+
             // here is the columnizer magic
             $('#coverPage').columnize({
                 columns: 1,

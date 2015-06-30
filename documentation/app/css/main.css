@@ -31,7 +31,12 @@ body {
 
 .page .content .column img {
   float: left;
-  margin: 10px; }
+  max-width: 100%;
+  box-sizing: border-box;
+  background-color: #DEDEDE;
+  padding: 10px 50px 10px 50px;
+  margin: 0;
+  margin-bottom: 5px; }
 
 .page .content .column p {
   padding: 0 0px;
@@ -101,6 +106,10 @@ span.mono {
 @media print {
   .page .content .column blockquote {
     background-color: #DEDEDE;
+    -webkit-print-color-adjust: exact; }
+
+  .page .content .column img {
+    background-color: #DEDEDE;
     -webkit-print-color-adjust: exact; } }
 .figtitle {
   font-weight: bold;
@@ -112,6 +121,19 @@ span.mono {
   bottom: 10px;
   left: 10px;
   text-align: left; }
+
+.ft_right {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  text-align: right; }
+
+.ft_mid {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  right: 0;
+  text-align: center; }
 
 .cover_template.page .content .header .address {
   float: left;
@@ -125,5 +147,17 @@ span.mono {
 .cover_template.page .content .title {
   padding-top: 220px;
   text-align: center; }
+
+.page .header.handout {
+  font-size: 1em;
+  padding: 0;
+  margin: 0; }
+  .page .header.handout h2 {
+    margin: 0;
+    padding: 0; }
+  .page .header.handout p {
+    margin: 0;
+    padding: 0;
+    padding-bottom: 20px; }
 
 /*# sourceMappingURL=main.css.map */
